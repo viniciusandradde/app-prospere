@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  docs:
+    name: Validar especificação
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validar JSON dos boards
+        run: |
+          for f in seed/*.json; do
+            python3 -c "import json,sys; json.load(open('$f')); print('$f OK')"
+          done
+
+      - name: Verificar referências de missões no board ativo
+        run: |
+          python3 - <<'PY'
+          import json, re, pathlib, sys
+          conteudo = pathlib.Path('docs/03-CONTEUDO-TRILHA.md').read_text()
+          ids = set(re.findall(r'\b(?:PRE|RUM|ORG|SON|PER|ENG|REN|ESC)-\d\d\b', conteudo))
+          board = pathlib.Path('seed/board.negocio.json').read_text()
+          refs = set(re.findall(r'"((?:PRE|RUM|ORG|SON|PER|ENG|REN|ESC)-\d\d)"', board))
+          faltando = sorted(refs - ids)
+          if faltando:
+              sys.exit(f'Missões referenciadas no board e ausentes no conteúdo: {faltando}')
+          print(f'{len(refs)} missões referenciadas, todas presentes no conteúdo.')
+          PY
+
+      - name: Garantir que sources/ não foi versionado
+        run: |
+          if git ls-files --error-unmatch sources/ >/dev/null 2>&1; then
+            echo "::error::sources/ contém material protegido e não pode ser versionado"
+            exit 1
+          fi
+          echo "sources/ ausente do versionamento, como esperado."
+
+  app:
+    name: Lint, tipos e testes
+    runs-on: ubuntu-latest
+    if: hashFiles('package.json') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test

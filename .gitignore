@@ -1,0 +1,40 @@
+# Dependências
+node_modules/
+.pnpm-store/
+
+# Build
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Ambiente
+.env
+.env.*
+!.env.example
+
+# Materiais de origem — protegidos por direitos autorais, NUNCA versionar
+sources/
+*.epub
+*.mobi
+
+# Testes e cobertura
+coverage/
+playwright-report/
+test-results/
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs e temporários
+*.log
+npm-debug.log*
+pnpm-debug.log*
+docs/review/*.tmp
+tmp/
