@@ -1,0 +1,204 @@
+{
+  "board_version": "2.0.0-negocio",
+  "edition": "negocio",
+  "phases_order": ["PRQ", "RUM", "SON", "PER", "ENG", "REN"],
+  "phases": {
+    "PRQ": { "name": "Pré-requisitos", "question": "A base mínima está de pé?", "note": "Preparar + Organizar condensados em um checklist de 3 itens + o ritual semanal." },
+    "RUM": { "name": "Rumar", "question": "Para onde vou e por qual caminho?" },
+    "SON": { "name": "Sondar", "question": "Alguém paga por isso?" },
+    "PER": { "name": "Persuadir", "question": "Minha oferta e minha mensagem convencem?" },
+    "ENG": { "name": "Engajar", "question": "Quem me conhece, confia e me indica?" },
+    "REN": { "name": "Rentabilizar", "question": "Estou vendendo todos os dias — e lançando?" },
+    "ESC": { "name": "Escalar", "status": "fora_do_mvp", "note": "Exibida como 'próximo nível' com lista de espera; entregue como serviço." }
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "title": "Qual frase descreve melhor o seu momento?",
+      "type": "single",
+      "options": [
+        { "value": "A3", "label": "Tenho uma ideia ou um produto/serviço, mas ainda não faturo com ele" },
+        { "value": "A4", "label": "Tenho um negócio em operação e quero vender mais — ou de forma previsível" },
+        { "value": "OUT_ESCALAR", "label": "Tenho empresa com time e faturamento acima de R$ 1 mi/ano e quero escalar", "gate": "waitlist_escalar" },
+        { "value": "OUT_PESSOAL", "label": "Quero renda extra ou sair de dívidas, ainda sem um negócio", "gate": "waitlist_pessoal" }
+      ]
+    },
+    {
+      "id": "q02",
+      "title": "Qual é o objetivo principal para os próximos meses?",
+      "type": "single",
+      "options": [
+        { "value": "primeiras_vendas", "label": "Fazer as primeiras vendas" },
+        { "value": "crescer_faturamento", "label": "Aumentar o faturamento" },
+        { "value": "previsibilidade", "label": "Ter vendas previsíveis, sem depender só de mim" },
+        { "value": "novo_produto", "label": "Lançar um novo produto ou serviço" }
+      ]
+    },
+    {
+      "id": "q03",
+      "title": "Qual faturamento mensal você quer alcançar, e em quanto tempo?",
+      "type": "goal",
+      "fields": [
+        { "id": "valor", "type": "currency", "label": "Faturamento mensal alvo (R$)" },
+        { "id": "ticket", "type": "currency", "label": "Preço médio do que você vende (ou pretende vender)" },
+        { "id": "prazo_meses", "type": "single", "label": "Prazo", "options": [3, 6, 12] }
+      ],
+      "hint": "Com o alvo e o preço médio o sistema calcula quantas vendas por semana você precisa."
+    },
+    {
+      "id": "q04",
+      "title": "Sobre o produto ou serviço:",
+      "type": "single",
+      "options": [
+        { "value": "sem_ideia", "label": "Ainda não sei exatamente o que vender" },
+        { "value": "ideia", "label": "Tenho a ideia, nada construído" },
+        { "value": "prototipo", "label": "Tenho um protótipo ou versão inicial" },
+        { "value": "validado_pagantes", "label": "Já tenho clientes pagantes" }
+      ]
+    },
+    {
+      "id": "q05",
+      "title": "Qual sua relação com vendas?",
+      "type": "single",
+      "options": [
+        { "value": "nunca_vendi", "label": "Nunca vendi por conta própria" },
+        { "value": "vendi_pouco", "label": "Já vendi, mas de forma irregular" },
+        { "value": "vendo_regular", "label": "Vendo com regularidade" },
+        { "value": "time_de_vendas", "label": "Tenho time ou processo de vendas" }
+      ]
+    },
+    {
+      "id": "q06",
+      "title": "Tamanho da sua audiência ou lista (redes, e-mails, contatos):",
+      "type": "single",
+      "options": [
+        { "value": 0, "label": "Nenhuma" },
+        { "value": 50, "label": "Menos de 100" },
+        { "value": 500, "label": "100 a 1.000" },
+        { "value": 5000, "label": "1.000 a 10.000" },
+        { "value": 20000, "label": "Mais de 10.000" }
+      ]
+    },
+    {
+      "id": "q07",
+      "title": "Quantas horas por semana você consegue dedicar a isso?",
+      "type": "single",
+      "options": [
+        { "value": 3, "label": "Menos de 5 h" },
+        { "value": 7, "label": "5 a 10 h" },
+        { "value": 15, "label": "10 a 20 h" },
+        { "value": 30, "label": "Mais de 20 h" }
+      ]
+    }
+  ],
+  "gates": {
+    "waitlist_escalar": {
+      "action": "waitlist",
+      "edition": "escalar",
+      "message": "Para empresas com time, o PROSPERE oferece a fase Escalar como programa acompanhado. Deixe seu contato e avisamos você. Se preferir, siga com a trilha Negócio para lançar uma nova linha."
+    },
+    "waitlist_pessoal": {
+      "action": "waitlist",
+      "edition": "pessoal",
+      "message": "A edição Pessoal (sair das dívidas e criar renda extra) ainda não está aberta. Deixe seu contato e avisamos você."
+    }
+  },
+  "archetype_rules": {
+    "primary": "q01",
+    "overrides": [
+      { "id": "ARC-VALIDATED", "when": { "q04": "validado_pagantes" }, "archetype": "A4", "why": "Quem já tem clientes pagantes está em operação, mesmo que se veja como iniciante." }
+    ],
+    "labels": { "A3": "Fundador(a)", "A4": "Operador(a)" }
+  },
+  "prerequisites": {
+    "missions": ["PRE-01", "ORG-06", "ORG-09"],
+    "ritual": "ORG-08",
+    "note": "Checklist exibido antes de Rumar. Não bloqueia a trilha; bloqueia apenas Rentabilizar (REN-*) enquanto ORG-09 não estiver concluída."
+  },
+  "missions_by_archetype": {
+    "A3": ["RUM-01", "RUM-04", "RUM-05", "SON-01", "SON-02", "SON-03", "SON-04", "SON-07", "PER-01", "PER-02", "PER-04", "PER-07", "ENG-01", "ENG-02", "ENG-05", "REN-02", "REN-04", "REN-06"],
+    "A4": ["RUM-01", "RUM-04", "RUM-05", "SON-03", "SON-07", "PER-01", "PER-02", "PER-04", "PER-07", "ENG-01", "ENG-02", "ENG-05", "REN-02", "REN-04", "REN-06"]
+  },
+  "mission_bindings": {
+    "note": "v1 tem 3 ferramentas; as demais missões usam campo de resposta com template ou template externo.",
+    "tools": {
+      "SON-03": "T-SON-03",
+      "SON-07": "T-SON-03",
+      "RUM-05": "T-SON-03",
+      "PER-01": "T-PER-01",
+      "PER-02": "T-PER-01",
+      "ORG-08": "T-ORG-07"
+    },
+    "response_templates": ["RUM-01", "RUM-02", "RUM-03", "RUM-04", "SON-02", "PER-04", "PER-05", "PER-06", "REN-04", "REN-06", "REN-09"],
+    "external_templates": { "ORG-09": "planilha de caixa", "ENG-01": "planilha de 30 nomes", "ENG-05": "página de captura (ferramenta externa)" },
+    "counters_only": ["SON-01", "PER-07", "ENG-02", "REN-02"]
+  },
+  "adjustments": [
+    {
+      "id": "ADJ-NOIDEA",
+      "when": { "q04": "sem_ideia" },
+      "effects": [{ "add_missions": { "ids": ["RUM-02", "RUM-03"], "before": "RUM-04" } }],
+      "why": "Sem saber o que vender, entram Mapa de Forças e escolha do modelo antes do cliente ideal."
+    },
+    {
+      "id": "ADJ-A4-NEW-OFFER",
+      "when": { "archetype": "A4", "q04_in": ["ideia", "prototipo"] },
+      "effects": [{ "add_missions": { "ids": ["SON-01", "SON-02"], "before": "SON-03" } }],
+      "why": "O negócio existe, mas a oferta nova não foi validada: entrevistas e MVP antes do experimento."
+    },
+    {
+      "id": "ADJ-NOSALES",
+      "when": { "q05": "nunca_vendi" },
+      "effects": [{ "add_missions": { "ids": ["PER-05", "PER-06"], "before": "PER-07" } }],
+      "why": "Quem nunca vendeu treina o script 1:1 e as objeções antes das 5 conversas medidas."
+    },
+    {
+      "id": "ADJ-SALESTEAM",
+      "when": { "q05": "time_de_vendas" },
+      "effects": [{ "add_missions": { "ids": ["REN-09"], "after": "REN-02" } }],
+      "why": "Com time de vendas, o ganho está no playbook, na daily de 15 minutos e no painel visível."
+    },
+    {
+      "id": "ADJ-AUDIENCE",
+      "when": { "q06_gte": 1000 },
+      "effects": [{ "set_flag": { "launch_kind": "internal" } }],
+      "why": "Você já tem audiência: o lançamento planejado em REN-04 é interno, para quem já te acompanha."
+    },
+    {
+      "id": "ADJ-NO-AUDIENCE",
+      "when": { "q06_lt": 1000 },
+      "effects": [{ "set_flag": { "launch_kind": "seed" } }],
+      "why": "Com pouca audiência, o primeiro lançamento é semente: 10 a 30 pessoas da sua rede."
+    },
+    {
+      "id": "ADJ-LOWTIME",
+      "when": { "q07_lte": 3 },
+      "effects": [{ "essential_mode": true }],
+      "why": "Com menos de 5 h por semana: uma missão por semana e nada de missão opcional."
+    }
+  ],
+  "goal": {
+    "metric_by_objective": {
+      "primeiras_vendas": "vendas no mês",
+      "crescer_faturamento": "faturamento mensal",
+      "previsibilidade": "vendas fechadas sem o fundador",
+      "novo_produto": "receita do novo produto"
+    },
+    "decomposition": "vendas_por_semana = ceil(valor / ticket / 4.33); contatos_por_semana = vendas_por_semana / conversao_estimada (referência inicial 5%)"
+  },
+  "estimation": {
+    "weeks_per_phase": "sum(effort_hours das missões incluídas) / horas_semana, mínimo 1, arredondado para 0.5",
+    "essential_mode": "uma missão por semana; missões opcionais (adjustments) entram só se o usuário pedir"
+  },
+  "explanation_templates": {
+    "intro": {
+      "A3": "Você está no ponto de partida Fundador(a). O maior risco é construir antes de provar que alguém paga: Sondar e Persuadir são o coração da sua trilha.",
+      "A4": "Você está no ponto de partida Operador(a). O negócio existe; o salto vem de oferta clara, rede ativa e rotina de vendas com números toda semana."
+    },
+    "goal": "Para faturar R$ {valor} por mês com ticket de R$ {ticket}, você precisa de {vendas_semana} vendas por semana — cerca de {contatos_semana} contatos, na referência inicial de 5% de conversão.",
+    "launch_kind": {
+      "seed": "Seu primeiro lançamento será semente: uma oferta simples para 10 a 30 pessoas da sua rede, antes de qualquer página ou anúncio.",
+      "internal": "Seu primeiro lançamento será interno: pré-lançamento em 3 conteúdos para a audiência que você já tem."
+    }
+  }
+}

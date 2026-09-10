@@ -1,0 +1,273 @@
+{
+  "board_version": "1.0.0",
+  "phases_order": ["PRE", "RUM", "ORG", "SON", "PER", "ENG", "REN", "ESC"],
+  "questions": [
+    {
+      "id": "q01",
+      "title": "Onde você está hoje?",
+      "type": "single",
+      "options": [
+        { "value": "A1", "label": "Endividado(a) ou sem folga no orçamento" },
+        { "value": "A2", "label": "Tenho renda (CLT/autônomo) e quero renda extra" },
+        { "value": "A3", "label": "Quero lançar um produto ou negócio — ainda sem faturamento" },
+        { "value": "A4", "label": "Tenho um negócio em operação (até R$ 1 mi/ano)" },
+        { "value": "A5", "label": "Empresa em crescimento (R$ 1–20 mi/ano), com time" },
+        { "value": "A6", "label": "Grande empresa, área ou unidade de negócio" }
+      ]
+    },
+    {
+      "id": "q02",
+      "title": "Qual é o objetivo principal para os próximos 12 meses?",
+      "type": "single",
+      "options": [
+        { "value": "sair_dividas", "label": "Zerar dívidas e respirar" },
+        { "value": "renda_extra", "label": "Criar uma renda extra mensal" },
+        { "value": "primeiras_vendas", "label": "Fazer as primeiras vendas de algo meu" },
+        { "value": "crescer_faturamento", "label": "Aumentar o faturamento" },
+        { "value": "previsibilidade", "label": "Ter vendas previsíveis, sem depender de mim" },
+        { "value": "montar_time", "label": "Montar ou fortalecer o time" },
+        { "value": "escalar", "label": "Escalar a operação" },
+        { "value": "novo_produto", "label": "Lançar um novo produto ou linha" },
+        { "value": "investir", "label": "Começar a investir e multiplicar patrimônio" }
+      ]
+    },
+    {
+      "id": "q03",
+      "title": "Qual número você quer alcançar? (em R$ por mês, ou saldo de dívida a zerar)",
+      "type": "currency",
+      "hint": "Ex.: R$ 5.000/mês de renda extra; R$ 80.000/mês de faturamento; R$ 18.000 de dívida a zerar."
+    },
+    {
+      "id": "q04",
+      "title": "Em quanto tempo?",
+      "type": "single",
+      "options": [
+        { "value": 3, "label": "3 meses" },
+        { "value": 6, "label": "6 meses" },
+        { "value": 12, "label": "12 meses" },
+        { "value": 24, "label": "24 meses" }
+      ]
+    },
+    {
+      "id": "q05",
+      "title": "Como está sua situação financeira agora?",
+      "type": "single",
+      "options": [
+        { "value": "dividas_juros_altos", "label": "Dívidas com juros altos (cartão, cheque especial, empréstimo caro)" },
+        { "value": "dividas_controladas", "label": "Dívidas, mas controladas (financiamento, parcelas em dia)" },
+        { "value": "sem_dividas_sem_reserva", "label": "Sem dívidas, mas sem reserva" },
+        { "value": "reserva_parcial", "label": "Reserva de 1 a 3 meses" },
+        { "value": "reserva_completa", "label": "Reserva de 3 meses ou mais" }
+      ]
+    },
+    {
+      "id": "q06",
+      "title": "Quantas horas por semana você consegue dedicar?",
+      "type": "single",
+      "options": [
+        { "value": 3, "label": "Menos de 5 h" },
+        { "value": 7, "label": "5 a 10 h" },
+        { "value": 15, "label": "10 a 20 h" },
+        { "value": 30, "label": "Mais de 20 h" }
+      ]
+    },
+    {
+      "id": "q07",
+      "title": "O que você já tem? (marque tudo que se aplica)",
+      "type": "multi",
+      "options": [
+        { "value": "habilidade_vendavel", "label": "Uma habilidade que pessoas pagariam" },
+        { "value": "audiencia", "label": "Audiência em alguma rede" },
+        { "value": "lista", "label": "Lista de contatos/e-mails/WhatsApp" },
+        { "value": "produto_pronto", "label": "Produto ou serviço pronto" },
+        { "value": "capital", "label": "Capital para investir" },
+        { "value": "equipamento", "label": "Equipamentos/estrutura" },
+        { "value": "rede_forte", "label": "Rede de contatos forte" },
+        { "value": "time", "label": "Time" }
+      ]
+    },
+    {
+      "id": "q08",
+      "title": "Qual sua relação com vendas?",
+      "type": "single",
+      "options": [
+        { "value": "nunca_vendi", "label": "Nunca vendi nada por conta própria" },
+        { "value": "vendi_pouco", "label": "Já vendi, mas de forma irregular" },
+        { "value": "vendo_regular", "label": "Vendo com regularidade" },
+        { "value": "time_de_vendas", "label": "Tenho time/processo de vendas" }
+      ]
+    },
+    {
+      "id": "q09",
+      "title": "Sobre o produto ou serviço:",
+      "type": "single",
+      "options": [
+        { "value": "sem_ideia", "label": "Ainda não sei o que vender" },
+        { "value": "ideia", "label": "Tenho uma ideia" },
+        { "value": "prototipo", "label": "Tenho um protótipo ou versão inicial" },
+        { "value": "validado_pagantes", "label": "Validado: tenho clientes pagantes" },
+        { "value": "escala", "label": "Vende bem e quero escalar" }
+      ]
+    },
+    {
+      "id": "q10",
+      "title": "Tamanho da sua audiência/lista (soma de redes, e-mails, contatos):",
+      "type": "single",
+      "options": [
+        { "value": 0, "label": "Nenhuma" },
+        { "value": 50, "label": "Menos de 100" },
+        { "value": 500, "label": "100 a 1.000" },
+        { "value": 5000, "label": "1.000 a 10.000" },
+        { "value": 20000, "label": "Mais de 10.000" }
+      ]
+    },
+    {
+      "id": "q11",
+      "title": "Quantas pessoas trabalham com você?",
+      "type": "single",
+      "options": [
+        { "value": 1, "label": "Só eu" },
+        { "value": 3, "label": "2 a 4" },
+        { "value": 12, "label": "5 a 20" },
+        { "value": 60, "label": "21 a 100" },
+        { "value": 200, "label": "Mais de 100" }
+      ]
+    },
+    {
+      "id": "q12",
+      "title": "Qual é o maior obstáculo hoje?",
+      "type": "single",
+      "options": [
+        { "value": "clareza", "label": "Falta de clareza do caminho" },
+        { "value": "dinheiro", "label": "Falta de dinheiro" },
+        { "value": "tempo", "label": "Falta de tempo" },
+        { "value": "conhecimento", "label": "Falta de conhecimento técnico" },
+        { "value": "disciplina", "label": "Disciplina e constância" },
+        { "value": "vendas", "label": "Não sei vender" },
+        { "value": "pessoas", "label": "Pessoas e liderança" }
+      ]
+    }
+  ],
+  "archetype_rules": {
+    "primary": "q01",
+    "overrides": [
+      { "id": "ARC-DEBT-GOAL", "when": { "q02": "sair_dividas" }, "archetype": "A1" }
+    ],
+    "labels": {
+      "A1": "Recomeço",
+      "A2": "Renda Extra",
+      "A3": "Fundador(a)",
+      "A4": "Operador(a)",
+      "A5": "Escalador(a)",
+      "A6": "Corporação"
+    }
+  },
+  "weights_by_archetype": {
+    "A1": { "PRE": "full",  "RUM": "light",  "ORG": "full",   "SON": "light",  "PER": "light",  "ENG": "light",  "REN": "medium", "ESC": "skip" },
+    "A2": { "PRE": "medium","RUM": "full",   "ORG": "medium", "SON": "medium", "PER": "medium", "ENG": "medium", "REN": "medium", "ESC": "skip" },
+    "A3": { "PRE": "light", "RUM": "full",   "ORG": "medium", "SON": "full",   "PER": "full",   "ENG": "full",   "REN": "full",   "ESC": "light" },
+    "A4": { "PRE": "light", "RUM": "medium", "ORG": "medium", "SON": "medium", "PER": "full",   "ENG": "full",   "REN": "full",   "ESC": "medium" },
+    "A5": { "PRE": "light", "RUM": "medium", "ORG": "light",  "SON": "medium", "PER": "medium", "ENG": "medium", "REN": "medium", "ESC": "full" },
+    "A6": { "PRE": "light", "RUM": "medium", "ORG": "skip",   "SON": "full",   "PER": "medium", "ENG": "medium", "REN": "medium", "ESC": "full" }
+  },
+  "weight_order": ["skip", "light", "medium", "full"],
+  "adjustments": [
+    {
+      "id": "ADJ-DEBT",
+      "when": { "q05": "dividas_juros_altos" },
+      "effects": [{ "set_min": { "ORG": "full" } }, { "move_before": { "phase": "ORG", "before": "RUM" } }],
+      "why": "Juros altos consomem qualquer ganho novo. Organizar entra antes de Rumar: primeiro estancar, depois construir."
+    },
+    {
+      "id": "ADJ-VALIDATED",
+      "when": { "q09_in": ["validado_pagantes", "escala"] },
+      "effects": [{ "set_max": { "SON": "light" } }],
+      "why": "Você já tem clientes pagantes: Sondar fica só com métricas acionáveis e a reunião Pivotar/Perseverar."
+    },
+    {
+      "id": "ADJ-NOIDEA",
+      "when": { "q09": "sem_ideia" },
+      "effects": [{ "set_min": { "RUM": "full" } }],
+      "why": "Sem saber o que vender, Rumar precisa ser completo: forças, modelo de renda e hipóteses antes de qualquer execução."
+    },
+    {
+      "id": "ADJ-AUDIENCE",
+      "when": { "q10_gte": 1000 },
+      "effects": [{ "set_max": { "ENG": "medium" } }, { "add_missions": ["REN-04", "REN-05", "REN-06"] }],
+      "why": "Você já tem audiência: menos construção de rede, mais lançamento interno para quem já te acompanha."
+    },
+    {
+      "id": "ADJ-LOWTIME",
+      "when": { "q06_lte": 3 },
+      "effects": [{ "essential_mode": true }],
+      "why": "Com menos de 5 h por semana, a trilha entra em modo essencial: uma missão por semana, ferramentas curtas."
+    },
+    {
+      "id": "ADJ-TEAM",
+      "when": { "q11_gte": 5 },
+      "effects": [{ "set_min": { "ESC": "light" } }],
+      "why": "Com time, liderar não é opcional: 1:1 semanal e comando descentralizado entram mesmo que o foco seja outro."
+    },
+    {
+      "id": "ADJ-NOSALES",
+      "when": { "q08": "nunca_vendi" },
+      "effects": [{ "set_min": { "PER": "medium" } }],
+      "why": "Quem nunca vendeu precisa treinar oferta e conversa de venda antes de lançar."
+    },
+    {
+      "id": "ADJ-DISCIPLINE",
+      "when": { "q12": "disciplina" },
+      "effects": [{ "set_min": { "PRE": "medium" } }],
+      "why": "Seu maior obstáculo é constância: Preparar ganha rotina, energia e diário emocional."
+    },
+    {
+      "id": "ADJ-INVEST",
+      "when": { "q02": "investir" },
+      "effects": [{ "set_min": { "ESC": "light" } }, { "add_missions": ["ORG-05", "ESC-08", "ESC-09"] }],
+      "why": "Investir começa com reserva e regra de alocação; entram as missões de reserva, alocação do lucro e carteira."
+    },
+    {
+      "id": "ADJ-SALESTEAM",
+      "when": { "q08": "time_de_vendas" },
+      "effects": [{ "add_missions": ["REN-09"] }],
+      "why": "Com time de vendas, o ganho está no playbook, na daily de 15 minutos e no painel visível."
+    },
+    {
+      "id": "ADJ-PEOPLE",
+      "when": { "q12": "pessoas" },
+      "effects": [{ "set_min": { "ESC": "medium" } }],
+      "why": "Seu gargalo é gente: Escalar sobe para o mínimo de médio — Manual do Líder, 1:1 e priorizar e agir."
+    }
+  ],
+  "goal_metric_by_objective": {
+    "sair_dividas": "saldo de dívida (deve cair)",
+    "renda_extra": "renda extra mensal",
+    "primeiras_vendas": "vendas no mês",
+    "crescer_faturamento": "faturamento mensal",
+    "previsibilidade": "vendas fechadas sem o fundador",
+    "montar_time": "1:1 realizados / pessoas contratadas",
+    "escalar": "faturamento mensal",
+    "novo_produto": "receita do novo produto",
+    "investir": "aporte mensal"
+  },
+  "estimation": {
+    "weeks_per_phase": "sum(effort_hours of included missions) / hours_per_week, min 1, arredondado para 0.5",
+    "essential_mode": "apenas missões light; 1 missão por semana; ferramentas em modo campos mínimos"
+  },
+  "explanation_templates": {
+    "intro": {
+      "A1": "Você está no ponto de partida Recomeço. A prioridade é parar a sangria (juros) e criar folga; só depois vem escolher a renda extra.",
+      "A2": "Você está no ponto de partida Renda Extra. Você tem base; o trabalho é escolher bem o modelo, validar rápido e instalar a rotina de vendas.",
+      "A3": "Você está no ponto de partida Fundador(a). O risco é construir antes de validar: Sondar e Persuadir são o coração da sua trilha.",
+      "A4": "Você está no ponto de partida Operador(a). O negócio existe; o salto vem de oferta, rede, rotina de vendas e primeiros sistemas.",
+      "A5": "Você está no ponto de partida Escalador(a). O gargalo é você: liderança, comando descentralizado e motor de crescimento.",
+      "A6": "Você está no ponto de partida Corporação. Inovar com método (sandbox, contabilidade da inovação) e formar líderes."
+    },
+    "phase_weight": {
+      "skip": "{phase} fica de fora por enquanto: não muda seu resultado nos próximos meses.",
+      "light": "{phase} entra no essencial: só as missões que destravam a próxima fase.",
+      "medium": "{phase} entra com profundidade média: base sólida sem virar projeto de meses.",
+      "full": "{phase} entra completa: é onde está a sua maior alavanca agora."
+    }
+  }
+}
