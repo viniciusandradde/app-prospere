@@ -16,5 +16,13 @@ arquivos individuais conforme forem revisitadas:
 | 005 | Multi-tenant desde o schema, single-tenant na UI do P0 |
 | 006 | LGPD e tratamento de dados financeiros |
 
+ADRs escritos neste repositório:
+
+| ADR | Decisão |
+|:--|:--|
+| [000](000-versoes.md) | Versões da stack no kickoff |
+| [007](007-autenticacao-por-link-magico.md) | Autenticação própria por link mágico, sem Auth.js |
+| [008](008-sem-tabelas-de-catalogo.md) | Catálogo só em código, sem tabelas e sem seed |
+
 Decisões pendentes (ver questões abertas no PRD): provedor de e-mail transacional,
 cifra de campos financeiros, âncoras do teste de preço.

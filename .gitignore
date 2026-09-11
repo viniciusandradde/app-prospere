@@ -38,3 +38,7 @@ npm-debug.log*
 pnpm-debug.log*
 docs/review/*.tmp
 tmp/
+
+# Artefatos de teste e2e
+test-results/
+.playwright/

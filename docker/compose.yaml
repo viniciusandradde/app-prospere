@@ -1,0 +1,19 @@
+# Postgres local para desenvolvimento: `docker compose -f docker/compose.yaml up -d`.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: prospere
+      POSTGRES_PASSWORD: prospere
+      POSTGRES_DB: prospere
+    ports:
+      - '5432:5432'
+    volumes:
+      - prospere-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U prospere']
+      interval: 5s
+      retries: 10
+
+volumes:
+  prospere-db:

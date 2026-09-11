@@ -1,0 +1,530 @@
+import type { Mission } from './types';
+
+/**
+ * Biblioteca de missões da edição Negócio — subconjunto de `docs/03-CONTEUDO-TRILHA.md`
+ * recortado pelo PRD ativo (`docs/04-PRD-MVP-NEGOCIO.md`, seção 7). Os IDs canônicos são
+ * preservados; as missões de Preparar/Organizar que sobreviveram ao corte entram na fase `PRQ`.
+ *
+ * `effortHours` já contempla a janela de 4 semanas para as missões recorrentes.
+ */
+export const missions: Mission[] = [
+  // ---------- Pré-requisitos (Preparar + Organizar condensados) ----------
+  {
+    id: 'PRE-01',
+    phaseId: 'PRQ',
+    title: 'Auditoria de Responsabilidade',
+    objective:
+      'Trocar as desculpas que se repetem por ações que estão sob o seu controle esta semana.',
+    steps: [
+      'Escreva 3 desculpas que você repete sobre o negócio ("o mercado está ruim", "não tenho tempo").',
+      'Para cada uma, escreva o que está sob o seu controle.',
+      'Converta em uma ação com prazo nesta semana.',
+    ],
+    result: '3 desculpas recorrentes convertidas em 3 ações com prazo.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'desculpas', label: 'As 3 desculpas que eu repito', hint: 'Uma por linha.' },
+      { id: 'controle', label: 'O que está sob o meu controle em cada uma' },
+      { id: 'acoes', label: 'As 3 ações desta semana, com dia marcado' },
+    ],
+    credit: 'Responsabilidade Extrema (Willink & Babin)',
+  },
+  {
+    id: 'ORG-06',
+    phaseId: 'PRQ',
+    title: 'Lista Hoje com 3 prioridades',
+    objective:
+      'Tirar tudo da cabeça, processar e reduzir o dia a no máximo 3 prioridades protegidas.',
+    steps: [
+      'Faça um despejo mental completo: tudo que está pendente, em uma lista só.',
+      'Processe cada item: fazer agora (≤ 2 min), agendar, delegar, arquivar ou descartar.',
+      'Escolha no máximo 3 prioridades para hoje e proteja um bloco de 90 minutos para a primeira.',
+    ],
+    result: 'Despejo mental processado e Lista Hoje com no máximo 3 prioridades.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'despejo', label: 'Despejo mental (tudo que está pendente)' },
+      { id: 'processamento', label: 'O que foi delegado, agendado ou descartado' },
+      { id: 'hoje', label: 'As 3 prioridades de hoje', hint: 'Máximo 3. Mais que isso não é prioridade.' },
+    ],
+  },
+  {
+    id: 'ORG-09',
+    phaseId: 'PRQ',
+    title: 'Finanças do negócio separadas',
+    objective:
+      'Separar o dinheiro do negócio do dinheiro pessoal e enxergar o caixa semana a semana.',
+    steps: [
+      'Abra (ou defina) uma conta exclusiva do negócio.',
+      'Monte uma planilha de caixa com entradas e saídas por semana.',
+      'Defina o percentual alvo por categoria: marketing, equipe, operação, impostos, reserva e lucro.',
+    ],
+    result: 'Conta separada + planilha de caixa semanal com categorias definidas.',
+    effortHours: 2,
+    kind: 'external',
+    external: 'Planilha de caixa (Google Sheets, Excel ou o app do seu banco)',
+  },
+  {
+    id: 'ORG-08',
+    phaseId: 'PRQ',
+    title: 'Revisão Semanal (ritual)',
+    objective:
+      'Instalar a cadência que sustenta a trilha: 30 minutos por semana olhando o número que importa.',
+    steps: [
+      'Escolha o dia e a hora fixos da revisão e ligue o lembrete.',
+      'Responda as 5 perguntas: vitórias, fuga de responsabilidade, números, aprendizado, prioridades.',
+      'A cada 4ª revisão, decida: perseverar, ajustar ou pivotar.',
+    ],
+    result: '2 revisões semanais concluídas, com o número da semana registrado.',
+    effortHours: 2,
+    recurring: 'weekly',
+    kind: 'tool',
+    toolId: 'T-ORG-07',
+  },
+
+  // ---------- Rumar ----------
+  {
+    id: 'RUM-01',
+    phaseId: 'RUM',
+    title: 'Canvas do Rumo',
+    objective: 'Escrever a meta de 12 meses em número, com prazo, porquê e marcos trimestrais.',
+    steps: [
+      'Defina a meta de 12 meses em R$ e a data.',
+      'Escreva o porquê — o que muda na sua vida quando bater.',
+      'Quebre em 3 marcos (90, 180 e 270 dias) e diga o que você abandona para caber.',
+    ],
+    result: 'Meta de 12 meses em R$ + prazo + porquê + 3 marcos trimestrais.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'meta', label: 'Meta de 12 meses (R$) e data' },
+      { id: 'porque', label: 'Por que essa meta importa' },
+      { id: 'marcos', label: 'Marcos de 90, 180 e 270 dias' },
+      { id: 'abandono', label: 'O que eu abandono para isso caber na agenda' },
+    ],
+    credit: 'A Fórmula do Lançamento (Walker)',
+  },
+  {
+    id: 'RUM-02',
+    phaseId: 'RUM',
+    title: 'Mapa de Forças',
+    objective: 'Saber com o que você já pode ganhar dinheiro antes de escolher o que vender.',
+    steps: [
+      'Liste 5 habilidades que outras pessoas já reconhecem em você.',
+      'Liste 5 ativos: rede, audiência, equipamentos, tempo livre, capital.',
+      'Escreva em que ramo você quer estar daqui a 10 anos.',
+    ],
+    result: '5 habilidades + 5 ativos mapeados e o ramo desejado em 10 anos.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'habilidades', label: '5 habilidades que os outros reconhecem em mim' },
+      { id: 'ativos', label: '5 ativos que eu já tenho', hint: 'Rede, audiência, equipamento, tempo, capital.' },
+      { id: 'ramo', label: 'Onde eu quero estar em 10 anos' },
+    ],
+  },
+  {
+    id: 'RUM-03',
+    phaseId: 'RUM',
+    title: 'Escolha do modelo de renda',
+    objective: 'Escolher um modelo compatível com o seu tempo, capital e habilidades — e um reserva.',
+    steps: [
+      'Filtre os modelos possíveis pelo tempo por semana e pelo capital que você tem hoje.',
+      'Para cada finalista, escreva: capital mínimo, tempo até a 1ª venda e ticket típico.',
+      'Escolha um principal e um reserva, e defina o primeiro passo dos próximos 7 dias.',
+    ],
+    result: '1 modelo de renda escolhido (+ 1 reserva) com o primeiro passo de 7 dias definido.',
+    effortHours: 2,
+    kind: 'template',
+    template: [
+      { id: 'finalistas', label: 'Modelos que cabem no meu tempo e capital' },
+      { id: 'escolha', label: 'Modelo principal e modelo reserva' },
+      { id: 'primeiro_passo', label: 'Primeiro passo nos próximos 7 dias' },
+    ],
+  },
+  {
+    id: 'RUM-04',
+    phaseId: 'RUM',
+    title: 'Cliente ideal e dor',
+    objective: 'Sair de "todo mundo" para uma pessoa concreta, com uma dor que custa caro.',
+    steps: [
+      'Descreva o cliente ideal: nome fictício, contexto, rotina.',
+      'Escreva a dor principal, o que ele já tentou e quanto o problema custa a ele.',
+      'Escreva a transformação prometida no formato "de ___ para ___".',
+    ],
+    result: 'Avatar escrito (contexto, dor, tentativas, sonho, objeção) + transformação prometida.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'avatar', label: 'Quem é (nome, contexto, rotina)' },
+      { id: 'dor', label: 'Dor principal e o que ele já tentou' },
+      { id: 'custo', label: 'Quanto esse problema custa a ele (R$, tempo ou saúde)' },
+      { id: 'transformacao', label: 'Transformação: de ___ para ___' },
+      { id: 'objecao', label: 'Objeção provável' },
+    ],
+  },
+  {
+    id: 'RUM-05',
+    phaseId: 'RUM',
+    title: 'Quadro de Hipóteses',
+    objective:
+      'Escrever as duas apostas que sustentam o negócio como afirmações que podem ser derrubadas.',
+    steps: [
+      'Hipótese de valor: "Acreditamos que [cliente] paga R$ [x] por [solução] porque [dor]".',
+      'Hipótese de crescimento: "Novos clientes chegam por [canal] a um custo de [y]".',
+      'Marque qual das duas é o maior risco — ela vira o primeiro experimento.',
+    ],
+    result: 'Hipótese de valor e hipótese de crescimento escritas como cartões testáveis.',
+    effortHours: 1,
+    kind: 'tool',
+    toolId: 'T-SON-03',
+    credit: 'A Startup Enxuta (Ries)',
+  },
+
+  // ---------- Sondar ----------
+  {
+    id: 'SON-01',
+    phaseId: 'SON',
+    title: '10 entrevistas de descoberta',
+    objective: 'Ouvir o cliente antes de construir — sem perguntar "você compraria?".',
+    steps: [
+      'Liste 15 pessoas do perfil e convide 10 para uma conversa de 20 minutos.',
+      'Pergunte sobre contexto, dor, o que já tentou e quanto o problema custa.',
+      'Registre a frase marcante de cada conversa; fale 20% do tempo.',
+    ],
+    result: '10 conversas registradas com dor, solução atual e disposição a pagar.',
+    effortHours: 6,
+    kind: 'counter',
+    counter: { unit: 'entrevistas', target: 10, noteLabel: 'Quem foi e a frase que ficou' },
+    credit: 'A Startup Enxuta (Ries)',
+  },
+  {
+    id: 'SON-02',
+    phaseId: 'SON',
+    title: 'Definir o MVP',
+    objective: 'Escolher a menor versão que permite aprender — e escrever o que fica de fora.',
+    steps: [
+      'Escolha o tipo: concierge, protótipo, página com lista de espera, pré-venda ou vídeo.',
+      'Liste o que entra e, principalmente, o que fica de fora.',
+      'Defina custo, prazo (máximo 14 dias) e como você vai medir.',
+    ],
+    result: 'Tipo de MVP escolhido, escopo definido e prazo de no máximo 14 dias.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'tipo', label: 'Tipo de MVP', hint: 'Concierge, protótipo, página + lista, pré-venda ou vídeo.' },
+      { id: 'entra', label: 'O que entra' },
+      { id: 'fora', label: 'O que fica de fora' },
+      { id: 'medicao', label: 'Custo, prazo (≤ 14 dias) e como eu meço' },
+    ],
+    credit: 'A Startup Enxuta (Ries)',
+  },
+  {
+    id: 'SON-03',
+    phaseId: 'SON',
+    title: 'Experimento 1 (Construir-Medir-Aprender)',
+    objective:
+      'Rodar o primeiro experimento com métrica e critério de sucesso definidos antes de começar.',
+    steps: [
+      'Pegue a hipótese de maior risco do quadro.',
+      'Defina o experimento, a métrica, o critério de sucesso e o prazo — antes de rodar.',
+      'Rode, registre o resultado e escreva o aprendizado e a decisão.',
+    ],
+    result: 'Um cartão do quadro atravessou A testar → Rodando → Medido → Aprendido, com decisão registrada.',
+    effortHours: 8,
+    kind: 'tool',
+    toolId: 'T-SON-03',
+    credit: 'A Startup Enxuta (Ries)',
+  },
+  {
+    id: 'SON-04',
+    phaseId: 'SON',
+    title: 'Seed Launch (pré-venda)',
+    objective: 'Vender antes de construir, para 10 a 30 pessoas da sua rede.',
+    steps: [
+      'Monte a lista de 10 a 30 pessoas que têm a dor.',
+      'Envie 3 mensagens em 7 a 10 dias: o problema, a solução em construção, o convite com preço e vagas reais.',
+      'Registre cada pagamento ou compromisso firmado.',
+    ],
+    result: 'Pelo menos 1 pagamento ou compromisso firmado — ou o pivô documentado.',
+    effortHours: 10,
+    kind: 'template',
+    template: [
+      { id: 'lista', label: 'As 10 a 30 pessoas convidadas' },
+      { id: 'mensagens', label: 'As 3 mensagens (problema, solução, convite)' },
+      { id: 'resultado', label: 'Quem comprou ou se comprometeu, e por quanto' },
+    ],
+    counter: { unit: 'pré-vendas', target: 1, noteLabel: 'Quem comprou e por quanto' },
+    credit: 'A Fórmula do Lançamento (Walker)',
+  },
+  {
+    id: 'SON-07',
+    phaseId: 'SON',
+    title: 'Reunião Pivotar ou Perseverar',
+    objective:
+      'Decidir, com os números na mesa, se o caminho continua, ajusta ou muda.',
+    steps: [
+      'Releia os cartões medidos e os números das últimas 4 semanas.',
+      'Compare com o critério de sucesso que você escreveu antes.',
+      'Registre a decisão — perseverar, ajustar ou pivotar — com o motivo nos números.',
+    ],
+    result: 'Decisão registrada com justificativa nas métricas, não na sensação.',
+    effortHours: 1,
+    recurring: 'monthly',
+    kind: 'tool',
+    toolId: 'T-SON-03',
+    prerequisites: ['SON-03'],
+    credit: 'A Startup Enxuta (Ries)',
+  },
+
+  // ---------- Persuadir ----------
+  {
+    id: 'PER-01',
+    phaseId: 'PER',
+    title: 'Construir a oferta',
+    objective: 'Escrever a oferta inteira: promessa, benefícios, prova, garantia, preço e objeções.',
+    steps: [
+      'Escreva a promessa: "Ajudo [cliente] a [resultado] sem [obstáculo]".',
+      'Liste 3 benefícios emocionais e 3 práticos; junte prova e garantia.',
+      'Defina preço, comparação de valor e responda pelo menos 3 objeções.',
+    ],
+    result: 'Oferta completa salva e exportável em Markdown.',
+    effortHours: 2,
+    kind: 'tool',
+    toolId: 'T-PER-01',
+    credit: 'As Armas da Persuasão 2.0 (Cialdini)',
+  },
+  {
+    id: 'PER-02',
+    phaseId: 'PER',
+    title: 'Auditoria ética dos 7 princípios',
+    objective:
+      'Passar a oferta pelos 7 princípios e remover tudo que for gatilho artificial.',
+    steps: [
+      'Para cada princípio, marque: aplicado de verdade, não se aplica ou removido por ser artificial.',
+      'Escreva como cada princípio aplicado é verdadeiro no seu caso.',
+      'Nada de escassez inventada ou prova social fabricada — a oferta não fecha com item artificial.',
+    ],
+    result: 'Os 7 princípios auditados; nenhum gatilho artificial na oferta final.',
+    effortHours: 0.75,
+    kind: 'tool',
+    toolId: 'T-PER-01',
+    prerequisites: ['PER-01'],
+    credit: 'As Armas da Persuasão 2.0 (Cialdini)',
+  },
+  {
+    id: 'PER-04',
+    phaseId: 'PER',
+    title: 'Pitch de 15 segundos',
+    objective: 'Dizer o que você faz em 15 segundos, sem jargão, e provocar a próxima pergunta.',
+    steps: [
+      'Escolha o gancho: pergunta, número ou história curta.',
+      'Monte a sequência Situação → Problema → Solução → Ação.',
+      'Grave, ouça e reescreva 3 vezes até caber em 15 segundos.',
+    ],
+    result: 'Pitch gravado, reescrito 3 vezes e cabendo em 15 segundos.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'gancho', label: 'Gancho (pergunta, número ou história)' },
+      { id: 'spsa', label: 'Situação → Problema → Solução → Ação' },
+      { id: 'versao_final', label: 'Versão final (a que cabe em 15 s)' },
+    ],
+  },
+  {
+    id: 'PER-05',
+    phaseId: 'PER',
+    title: 'Script de venda 1:1',
+    objective: 'Ter um roteiro de conversa que diagnostica antes de propor.',
+    steps: [
+      'Abertura: quebra-gelo curto e o combinado da conversa.',
+      'Diagnóstico: contexto, dor, custo, o que já tentou, critério de decisão, prazo.',
+      'Proposta e fechamento com pergunta direta. Escute 80% do tempo.',
+    ],
+    result: 'Script escrito por etapa, pronto para as 5 conversas medidas.',
+    effortHours: 2,
+    kind: 'template',
+    template: [
+      { id: 'abertura', label: 'Abertura' },
+      { id: 'diagnostico', label: 'Perguntas de diagnóstico' },
+      { id: 'proposta', label: 'Proposta (transformação e comparação de valor)' },
+      { id: 'fechamento', label: 'Fechamento (a pergunta direta)' },
+    ],
+  },
+  {
+    id: 'PER-06',
+    phaseId: 'PER',
+    title: 'Banco de objeções',
+    objective: 'Ter resposta pronta e honesta para as objeções que sempre aparecem.',
+    steps: [
+      'Escreva "está caro", "não sei se funciona", "não preciso agora" e mais 2 do seu mercado.',
+      'Responda cada uma no formato "sim, e…" — sem brigar com o cliente.',
+      'Junte a prova que sustenta cada resposta.',
+    ],
+    result: '5 objeções com resposta e prova correspondente.',
+    effortHours: 1,
+    kind: 'template',
+    template: [
+      { id: 'objecoes', label: 'As 5 objeções' },
+      { id: 'respostas', label: 'Resposta "sim, e…" para cada uma' },
+      { id: 'provas', label: 'A prova que sustenta cada resposta' },
+    ],
+  },
+  {
+    id: 'PER-07',
+    phaseId: 'PER',
+    title: '5 conversas de venda medidas',
+    objective: 'Testar o script em conversas reais e medir a conversão.',
+    steps: [
+      'Aplique o script em 5 conversas.',
+      'Registre o resultado de cada uma: fechou, ficou de pensar ou não.',
+      'Calcule a conversão e escolha o ponto do roteiro que vai mudar.',
+    ],
+    result: '5 conversas registradas com resultado e taxa de conversão calculada.',
+    effortHours: 5,
+    kind: 'counter',
+    counter: { unit: 'conversas', target: 5, noteLabel: 'Com quem, e como terminou' },
+  },
+
+  // ---------- Engajar ----------
+  {
+    id: 'ENG-01',
+    phaseId: 'ENG',
+    title: 'Plano de relacionamentos (30 nomes)',
+    objective: 'Sair do networking transacional: 30 nomes e como você ajuda cada um primeiro.',
+    steps: [
+      'Escreva sua missão e 3 objetivos para os próximos 90 dias.',
+      'Liste 30 nomes por tipo: cliente, mentor, par, guardião, super-conector, parceiro.',
+      'Para cada um: por que importa, como eu ajudo primeiro e o próximo passo com data.',
+    ],
+    result: '30 nomes com "como ajudo primeiro" e próximo passo datado.',
+    effortHours: 2,
+    kind: 'external',
+    external: 'Planilha de 30 nomes (Google Sheets ou Excel)',
+    credit: 'Nunca Almoce Sozinho (Ferrazzi)',
+  },
+  {
+    id: 'ENG-02',
+    phaseId: 'ENG',
+    title: '1 encontro por semana',
+    objective: 'Transformar a lista em relação: um encontro real por semana, com follow-up.',
+    steps: [
+      'Marque um café, almoço ou call por semana com alguém da lista.',
+      'Faça o dever de casa antes: 3 fatos sobre a pessoa.',
+      'Mande o follow-up em até 24 horas, com algo útil.',
+    ],
+    result: '4 encontros feitos, cada um com follow-up em 24 h.',
+    effortHours: 4,
+    recurring: 'weekly',
+    kind: 'counter',
+    counter: { unit: 'encontros', target: 4, noteLabel: 'Com quem, e o follow-up que enviei' },
+    credit: 'Nunca Almoce Sozinho (Ferrazzi)',
+  },
+  {
+    id: 'ENG-05',
+    phaseId: 'ENG',
+    title: 'Isca digital + captura',
+    objective: 'Começar a lista própria: uma isca específica para a dor do cliente ideal.',
+    steps: [
+      'Crie uma isca que resolve um pedaço real da dor (checklist, guia, planilha, aula curta).',
+      'Publique uma página de captura simples com headline, promessa e um campo.',
+      'Defina a meta de leads por dia e registre o número toda semana.',
+    ],
+    result: 'Página de captura no ar e meta de leads por dia definida.',
+    effortHours: 4,
+    kind: 'external',
+    external: 'Ferramenta de captura (formulário, landing page ou e-mail marketing)',
+    credit: 'A Fórmula do Lançamento (Walker)',
+  },
+
+  // ---------- Rentabilizar ----------
+  {
+    id: 'REN-02',
+    phaseId: 'REN',
+    title: 'Rotina diária de vendas',
+    objective: 'Vender todo dia, mesmo sem lançamento: manhã, tarde e fim do dia.',
+    steps: [
+      'Manhã: meta do dia e as abordagens novas.',
+      'Tarde: follow-ups de quem já falou com você.',
+      'Fim do dia: registre contatos, conversas, propostas e vendas.',
+    ],
+    result: '20 dias úteis de rotina registrada, com os números do dia.',
+    effortHours: 20,
+    recurring: 'daily',
+    kind: 'counter',
+    counter: { unit: 'dias de rotina', target: 20, noteLabel: 'Abordagens, follow-ups e vendas do dia' },
+    prerequisites: ['ORG-09'],
+  },
+  {
+    id: 'REN-04',
+    phaseId: 'REN',
+    title: 'Planejar o lançamento',
+    objective: 'Montar o calendário do lançamento, do aquecimento ao fechamento do carrinho.',
+    steps: [
+      'Defina a data de abertura e quantos dias o carrinho fica aberto.',
+      'Monte a sequência: pré-pré-lançamento (ouvir), 3 conteúdos de pré-lançamento, abertura, meio, último dia.',
+      'Distribua os estímulos por peça: autoridade, reciprocidade, expectativa, comunidade, prova social e escassez real.',
+    ],
+    result: 'Calendário do lançamento com tarefas datadas e estímulos distribuídos por peça.',
+    effortHours: 4,
+    kind: 'template',
+    template: [
+      { id: 'tipo', label: 'Tipo de lançamento e por quê', hint: 'Semente (rede pequena) ou interno (audiência existente).' },
+      { id: 'calendario', label: 'Calendário: pré-pré → conteúdos 1-2-3 → abertura → fecho → pós' },
+      { id: 'pecas', label: 'As peças e o estímulo de cada uma' },
+    ],
+    prerequisites: ['ORG-09'],
+    credit: 'A Fórmula do Lançamento (Walker)',
+  },
+  {
+    id: 'REN-06',
+    phaseId: 'REN',
+    title: 'Executar e fechar o lançamento',
+    objective: 'Rodar o lançamento e transformar o resultado em aprendizado para o próximo.',
+    steps: [
+      'Execute o calendário, sem adiar a abertura.',
+      'Registre leads, vendas, receita e conversão.',
+      'No pós, colha depoimentos e escreva o que muda no próximo ciclo.',
+    ],
+    result: 'Lançamento executado com números registrados e depoimentos coletados.',
+    effortHours: 8,
+    kind: 'template',
+    template: [
+      { id: 'numeros', label: 'Leads, vendas, receita e conversão' },
+      { id: 'funcionou', label: 'O que funcionou' },
+      { id: 'muda', label: 'O que muda no próximo' },
+      { id: 'depoimentos', label: 'Depoimentos coletados' },
+    ],
+    prerequisites: ['REN-04'],
+    credit: 'A Fórmula do Lançamento (Walker)',
+  },
+  {
+    id: 'REN-09',
+    phaseId: 'REN',
+    title: 'Playbook e daily de vendas',
+    objective: 'Tirar a venda da sua cabeça e colocar no processo do time.',
+    steps: [
+      'Documente scripts, objeções e KPIs em um playbook.',
+      'Instale a daily de 15 minutos: número de ontem, meta de hoje, travas.',
+      'Deixe o painel de vendas visível para o time.',
+    ],
+    result: 'Playbook escrito, daily de 15 min rodando e painel visível ao time.',
+    effortHours: 4,
+    kind: 'template',
+    template: [
+      { id: 'playbook', label: 'Playbook: scripts, objeções e KPIs' },
+      { id: 'daily', label: 'Formato da daily de 15 minutos' },
+      { id: 'painel', label: 'O que fica visível no painel' },
+    ],
+    prerequisites: ['ORG-09'],
+  },
+];
+
+export const missionById = new Map(missions.map((m) => [m.id, m]));
+
+/** Missões do checklist de pré-requisitos (`seed/board.negocio.json`). */
+export const PREREQUISITE_MISSION_IDS = ['PRE-01', 'ORG-06', 'ORG-09'] as const;
+/** Ritual que acompanha a trilha inteira. */
+export const RITUAL_MISSION_ID = 'ORG-08';

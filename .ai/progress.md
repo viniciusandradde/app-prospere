@@ -13,3 +13,18 @@
 - Análise de overfeat: 6 públicos, 54 ferramentas e 10 agentes no MVP. Decisão: 2 produtos + 1 serviço,
   mesma engine, construídos em sequência; primeiro a edição Negócio.
 - Criados `docs/04-PRD-MVP-NEGOCIO.md` (escopo ativo) e `seed/board.negocio.json` (7 perguntas, gates).
+
+## 2026-09-11 — Sistema construído (semanas 1 a 4 do PRD Negócio)
+- **Monorepo pnpm**: `apps/web` (Next.js 16 + Tailwind 4 + Drizzle), `packages/content`, `packages/engine`.
+- **`packages/content`**: catálogo tipado com as 27 missões do MVP (IDs canônicos de `docs/03`),
+  as 3 ferramentas com schema Zod + render em Markdown, os livros citados. Testes de integridade
+  cruzam catálogo × `seed/board.negocio.json`.
+- **`packages/engine`**: `generateTrail(answers, board)` puro e determinístico — arquétipo (com
+  ARC-VALIDATED), meta decomposta, os 7 ajustes, fases com estimativa e explicação. 27 testes.
+- **`apps/web`**: link mágico + workspace pessoal; board de 7 perguntas com gates e lista de espera;
+  trilha com o "por quê"; missões com template, contador e bloqueio por pré-requisito; Quadro
+  Construir-Medir-Aprender; Construtor de Oferta com auditoria ética que bloqueia gatilho artificial;
+  Revisão Semanal com streak, gráfico e bloco Pivotar/Perseverar a cada 4 semanas; Hoje; exportar em
+  Markdown; telemetria dos 6 eventos; exclusão de conta (LGPD); lembrete por e-mail via cron.
+- **Testes**: 57 unitários (Vitest) + 8 e2e (Playwright, desktop e mobile 360 px) contra Postgres real.
+- **ADRs**: 000 (versões), 007 (auth própria em vez de Auth.js), 008 (catálogo sem tabelas).

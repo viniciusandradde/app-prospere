@@ -4,7 +4,7 @@
 
 Sistema que transforma um diagnóstico de 7 perguntas em uma trilha personalizada de execução — missões com resultado verificável, ferramentas que geram artefatos e um ritual semanal com números — para quem quer tirar um negócio do papel ou fazer o negócio que já existe vender mais.
 
-[![Status](https://img.shields.io/badge/status-especifica%C3%A7%C3%A3o%20%7C%20pr%C3%A9--c%C3%B3digo-blue)](docs/08-PLANO-CLAUDE-CODE.md)
+[![Status](https://img.shields.io/badge/status-MVP%20implementado-blue)](.ai/handoff.md)
 [![MVP](https://img.shields.io/badge/MVP-edi%C3%A7%C3%A3o%20Neg%C3%B3cio-success)](docs/04-PRD-MVP-NEGOCIO.md)
 [![Stack](https://img.shields.io/badge/stack-Next.js%20%7C%20shadcn%2Fui%20%7C%20PostgreSQL-black)](docs/05-ARQUITETURA-E-ADRS.md)
 [![Idioma](https://img.shields.io/badge/idioma-pt--BR-green)](#)
@@ -114,33 +114,60 @@ Decisões registradas como ADRs em [`docs/05-ARQUITETURA-E-ADRS.md`](docs/05-ARQ
 
 ```
 app-prospere/
-├── docs/                     Especificação completa (00 a 09)
+├── apps/web/                 Next.js (App Router): board, trilha, missões, ferramentas, ritual
+│   ├── src/app/                telas e rotas (Server Components + Server Actions)
+│   ├── src/db/                 schema Drizzle (13 tabelas) e conexão
+│   └── src/lib/                auth por link mágico, consultas, telemetria, e-mail
+├── packages/
+│   ├── content/              catálogo como código: 27 missões, 3 ferramentas (Zod), livros
+│   └── engine/               motor de trilha determinístico + testes por persona
+├── e2e/                      Playwright: cadastro → board → trilha → missão → ferramentas
+├── docs/                     Especificação completa (00 a 09) + adr/
 │   ├── 02-METODO-PROSPERE.md   O método: fases, arquétipos, regras
 │   ├── 03-CONTEUDO-TRILHA.md   67 missões e 54 ferramentas com critérios
 │   ├── 04-PRD-MVP-NEGOCIO.md   ESCOPO ATIVO
-│   ├── 06-schema.sql           Modelo de dados
-│   └── adr/                    Architecture Decision Records
+│   └── 06-schema.sql           Modelo de dados de referência
 ├── seed/
 │   ├── board.negocio.json    Board ativo: 7 perguntas, gates, ajustes
 │   └── board.json            Board completo (referência)
+├── docker/                   Dockerfile (Dokploy) e Postgres local
 ├── scripts/                  Utilitários (extração de fontes)
 ├── .claude/agents/           10 subagentes especialistas
 ├── .ai/                      Contexto multi-IDE (context/progress/handoff)
 └── CLAUDE.md                 Instruções para o Claude Code
 ```
 
-> **Ainda não há código de aplicação.** Este repositório é a especificação executável que alimenta o Sprint 0. O código entra em `apps/web` e `packages/*` conforme [`docs/05`](docs/05-ARQUITETURA-E-ADRS.md).
+> O escopo implementado é o da **edição Negócio** ([`docs/04-PRD-MVP-NEGOCIO.md`](docs/04-PRD-MVP-NEGOCIO.md)): 5 fases, 27 missões e 3 ferramentas. As outras 40 missões e 51 ferramentas seguem documentadas em [`docs/03`](docs/03-CONTEUDO-TRILHA.md) como biblioteca do método, fora do MVP.
 
 ## Começando
 
-**Pré-requisitos:** Node.js LTS, pnpm, Docker (PostgreSQL local), Git.
+**Pré-requisitos:** Node.js 22 LTS, pnpm 10, Docker (PostgreSQL local), Git.
 
 ```bash
 git clone https://github.com/viniciusandradde/app-prospere.git
 cd app-prospere
+pnpm install
+
+docker compose -f docker/compose.yaml up -d     # PostgreSQL 16 local
+cp .env.example .env                            # ajuste DATABASE_URL
+pnpm --filter @prospere/web db:push             # cria as tabelas
+
+pnpm dev                                        # http://localhost:3000
 ```
 
-**Sprint 0 (fundação):** abra o Claude Code na raiz e use o prompt de kickoff em [`docs/08-PLANO-CLAUDE-CODE.md`](docs/08-PLANO-CLAUDE-CODE.md#2--prompts-prontos). Ele lê `CLAUDE.md` e `.ai/context.md` automaticamente.
+Sem `EMAIL_API_KEY` configurada, o link de acesso do cadastro aparece na própria tela de login — o suficiente para desenvolver sem provedor de e-mail.
+
+**Comandos:**
+
+| Comando | O que faz |
+|:--|:--|
+| `pnpm dev` | Sobe o app em desenvolvimento |
+| `pnpm test` | Testes unitários (motor, catálogo, ferramentas) |
+| `pnpm test:e2e` | Fluxo completo no navegador, desktop e mobile |
+| `pnpm lint` / `pnpm typecheck` | Lint e tipos em todo o monorepo |
+| `pnpm --filter @prospere/web db:generate` | Gera migration a partir do schema Drizzle |
+
+**Lembretes do ritual:** um agendador externo chama `POST /api/cron/lembretes` com o cabeçalho `Authorization: Bearer $CRON_SECRET`.
 
 **Materiais de origem:** os livros e e-books que embasaram o método **não são distribuídos** (direitos autorais). Para trabalhar com eles localmente:
 
@@ -152,13 +179,13 @@ python3 scripts/extract-sources.py <pasta-com-os-originais> sources/
 
 ## Roadmap
 
-| Semana | Entrega | Pronto quando |
+| Semana | Entrega | Estado |
 |:--|:--|:--|
-| 1 | Monorepo, motor de trilha, conteúdo tipado, board | `pnpm test` verde e trilha gerada para as personas |
-| 2 | Auth, board na UI, tela da trilha, missões | e2e: cadastro → board → trilha → missão concluída |
-| 3 | Quadro Construir-Medir-Aprender + Construtor de Oferta | Schema, form, render Markdown e testes |
-| 4 | Revisão Semanal, lembretes, exportar, LGPD, deploy | Beta com 20 pessoas |
-| 5–6 | Acompanhamento do beta, entrevistas, teste de preço | **Gate** documentado em ADR |
+| 1 | Monorepo, motor de trilha, conteúdo tipado, board | ✅ `pnpm test` verde, trilha gerada para as personas |
+| 2 | Auth, board na UI, tela da trilha, missões | ✅ e2e: cadastro → board → trilha → missão concluída |
+| 3 | Quadro Construir-Medir-Aprender + Construtor de Oferta | ✅ schema, formulário, render Markdown e testes |
+| 4 | Revisão Semanal, lembretes, exportar, LGPD, deploy | ⏳ falta o deploy no Dokploy e o provedor de e-mail |
+| 5–6 | Acompanhamento do beta, entrevistas, teste de preço | ⏳ **Gate** documentado em ADR |
 | v1.1 | Pipeline, Planejador de Lançamento, chat por fase | Só se o gate passar |
 | v2 | Edição Pessoal, Escalar como programa, workspace de empresa | — |
 
