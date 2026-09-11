@@ -217,6 +217,40 @@ describe('fases e estimativa', () => {
   });
 });
 
+describe('comece por aqui (primeira semana)', () => {
+  it('leva a oferta para a primeira semana de quem já sabe o que vende', () => {
+    const { quickStart } = trail(camila);
+    expect(quickStart.missionIds).toEqual(['RUM-04', 'PER-01', 'PER-04']);
+    expect(quickStart.why.length).toBeGreaterThan(20);
+  });
+
+  it('quem ainda não sabe o que vender começa por descobrir isso', () => {
+    const { quickStart } = trail({ ...camila, q04: 'sem_ideia' });
+    expect(quickStart.missionIds).toEqual(['RUM-02', 'RUM-03', 'RUM-04']);
+  });
+
+  it('só indica missões que estão na trilha da pessoa', () => {
+    for (const answers of [camila, marcos, { ...camila, q04: 'sem_ideia' }, { ...marcos, q05: 'time_de_vendas' }]) {
+      const resultado = trail(answers as BoardAnswers);
+      const naTrilha = new Set(resultado.missions.map((m) => m.id));
+      for (const id of resultado.quickStart.missionIds) {
+        expect(naTrilha.has(id), `${id} fora da trilha`).toBe(true);
+      }
+    }
+  });
+
+  it('nenhuma missão do começo depende de outra que ficou para trás', () => {
+    const resultado = trail(camila);
+    const inicio = resultado.quickStart.missionIds;
+    for (const id of inicio) {
+      const mission = resultado.missions.find((m) => m.id === id);
+      for (const prerequisito of mission?.blockedBy ?? []) {
+        expect(inicio.indexOf(prerequisito)).toBeLessThan(inicio.indexOf(id));
+      }
+    }
+  });
+});
+
 describe('explicação (regras disparadas viram texto)', () => {
   it('traz intro do arquétipo, meta e o porquê de cada ajuste', () => {
     const { explanation } = trail(camila);

@@ -61,10 +61,15 @@ export const missions: Mission[] = [
       'Monte uma planilha de caixa com entradas e saídas por semana.',
       'Defina o percentual alvo por categoria: marketing, equipe, operação, impostos, reserva e lucro.',
     ],
-    result: 'Conta separada + planilha de caixa semanal com categorias definidas.',
+    result: 'Conta separada confirmada + regra de caixa e categorias escritas.',
     effortHours: 2,
-    kind: 'external',
-    external: 'Planilha de caixa (Google Sheets, Excel ou o app do seu banco)',
+    kind: 'template',
+    template: [
+      { id: 'conta', label: 'Conta do negócio', hint: 'Banco e data em que você separou. Se ainda não separou, escreva o prazo.' },
+      { id: 'categorias', label: 'Para onde vai cada real que entra', hint: 'Marketing, equipe, operação, impostos, reserva e lucro — em % do faturamento.' },
+      { id: 'rotina', label: 'Quando eu olho o caixa', hint: 'Dia e hora fixos da semana.' },
+    ],
+    external: 'Uma conta bancária separada e a planilha ou extrato onde os lançamentos ficam',
   },
   {
     id: 'ORG-08',
@@ -197,7 +202,7 @@ export const missions: Mission[] = [
     result: '10 conversas registradas com dor, solução atual e disposição a pagar.',
     effortHours: 6,
     kind: 'counter',
-    counter: { unit: 'entrevistas', target: 10, noteLabel: 'Quem foi e a frase que ficou' },
+    counter: { unit: 'entrevistas', target: 10, noteLabel: 'Quem foi e a frase que ficou', metric: 'conversas' },
     credit: 'A Startup Enxuta (Ries)',
   },
   {
@@ -256,7 +261,7 @@ export const missions: Mission[] = [
       { id: 'mensagens', label: 'As 3 mensagens (problema, solução, convite)' },
       { id: 'resultado', label: 'Quem comprou ou se comprometeu, e por quanto' },
     ],
-    counter: { unit: 'pré-vendas', target: 1, noteLabel: 'Quem comprou e por quanto' },
+    counter: { unit: 'pré-vendas', target: 1, noteLabel: 'Quem comprou e por quanto', metric: 'vendas' },
     credit: 'A Fórmula do Lançamento (Walker)',
   },
   {
@@ -385,7 +390,7 @@ export const missions: Mission[] = [
     result: '5 conversas registradas com resultado e taxa de conversão calculada.',
     effortHours: 5,
     kind: 'counter',
-    counter: { unit: 'conversas', target: 5, noteLabel: 'Com quem, e como terminou' },
+    counter: { unit: 'conversas', target: 5, noteLabel: 'Com quem, e como terminou', metric: 'conversas' },
   },
 
   // ---------- Engajar ----------
@@ -401,8 +406,24 @@ export const missions: Mission[] = [
     ],
     result: '30 nomes com "como ajudo primeiro" e próximo passo datado.',
     effortHours: 2,
-    kind: 'external',
-    external: 'Planilha de 30 nomes (Google Sheets ou Excel)',
+    kind: 'list',
+    list: {
+      target: 30,
+      unit: 'nomes',
+      addLabel: 'Adicionar pessoa',
+      columns: [
+        { id: 'nome', label: 'Nome', placeholder: 'Ana Paula' },
+        {
+          id: 'tipo',
+          label: 'Tipo',
+          options: ['cliente', 'mentor', 'par', 'guardião', 'super-conector', 'parceiro'],
+        },
+        { id: 'por_que', label: 'Por que importa', placeholder: 'Atende o mesmo público que eu' },
+        { id: 'como_ajudo', label: 'Como eu ajudo primeiro', placeholder: 'Indico duas clientes' },
+        { id: 'proximo_passo', label: 'Próximo passo', placeholder: 'Chamar para um café' },
+        { id: 'quando', label: 'Quando' },
+      ],
+    },
     credit: 'Nunca Almoce Sozinho (Ferrazzi)',
   },
   {
@@ -419,7 +440,7 @@ export const missions: Mission[] = [
     effortHours: 4,
     recurring: 'weekly',
     kind: 'counter',
-    counter: { unit: 'encontros', target: 4, noteLabel: 'Com quem, e o follow-up que enviei' },
+    counter: { unit: 'encontros', target: 4, noteLabel: 'Com quem, e o follow-up que enviei', metric: 'contatos' },
     credit: 'Nunca Almoce Sozinho (Ferrazzi)',
   },
   {
@@ -432,10 +453,15 @@ export const missions: Mission[] = [
       'Publique uma página de captura simples com headline, promessa e um campo.',
       'Defina a meta de leads por dia e registre o número toda semana.',
     ],
-    result: 'Página de captura no ar e meta de leads por dia definida.',
+    result: 'Isca definida, página no ar e meta de leads por dia registrada.',
     effortHours: 4,
-    kind: 'external',
-    external: 'Ferramenta de captura (formulário, landing page ou e-mail marketing)',
+    kind: 'template',
+    template: [
+      { id: 'isca', label: 'A isca', hint: 'Título, formato e qual pedaço da dor ela resolve.' },
+      { id: 'pagina', label: 'A página de captura', hint: 'Headline, promessa, o campo que você pede e o link quando estiver no ar.' },
+      { id: 'meta', label: 'Meta de leads por dia e de onde eles vêm', hint: 'Orgânico, parcerias ou anúncio — com o valor que você aceita gastar por dia.' },
+    ],
+    external: 'Uma ferramenta de captura (formulário, landing page ou e-mail marketing) para hospedar a página',
     credit: 'A Fórmula do Lançamento (Walker)',
   },
 

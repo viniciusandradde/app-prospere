@@ -13,9 +13,9 @@ export type Archetype = 'A3' | 'A4';
 export type MissionKind =
   | 'checklist' // pré-requisito: marca como feito
   | 'template' // campo de resposta guiado por template
+  | 'list' // lista estruturada de linhas (plano de relacionamentos, por exemplo)
   | 'counter' // contador com registro datado
-  | 'tool' // uma das 3 ferramentas do MVP
-  | 'external'; // template externo (planilha, página de captura)
+  | 'tool'; // uma das 3 ferramentas do MVP
 
 export type Recurrence = 'daily' | 'weekly' | 'monthly';
 
@@ -26,12 +26,37 @@ export interface MissionTemplateSection {
   hint?: string;
 }
 
+/** Métricas do número da semana (Revisão Semanal). */
+export const WEEK_METRICS = ['contatos', 'conversas', 'propostas', 'vendas'] as const;
+export type WeekMetric = (typeof WEEK_METRICS)[number];
+
 export interface MissionCounter {
   /** O que se conta: entrevistas, conversas, encontros, dias de rotina. */
   unit: string;
   target: number;
   /** Cada registro guarda data + nota curta. */
   noteLabel: string;
+  /**
+   * Métrica da Revisão Semanal alimentada por este contador. Sem isso, o contador conta
+   * para a missão mas não entra nos números da semana (o caso da rotina diária).
+   */
+  metric?: WeekMetric;
+}
+
+export interface MissionListColumn {
+  id: string;
+  label: string;
+  placeholder?: string;
+  /** Opções fechadas, quando a coluna é uma escolha. */
+  options?: string[];
+}
+
+export interface MissionList {
+  columns: MissionListColumn[];
+  /** Quantas linhas a missão pede para ser considerada cumprida. */
+  target: number;
+  addLabel: string;
+  unit: string;
 }
 
 export interface Mission {
@@ -52,7 +77,11 @@ export interface Mission {
   toolId?: ToolId;
   template?: MissionTemplateSection[];
   counter?: MissionCounter;
-  /** Ferramenta externa sugerida (planilha, página de captura). */
+  list?: MissionList;
+  /**
+   * Ferramenta de fora que a missão exige no mundo real (conta bancária, página de captura).
+   * O artefato continua sendo salvo aqui — a dica só diz o que preparar por fora.
+   */
   external?: string;
   /** Crédito visível ao usuário — apenas livros publicados. */
   credit?: string;

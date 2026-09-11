@@ -68,6 +68,12 @@ export interface TrailExplanation {
   adjustments: AppliedAdjustment[];
 }
 
+export interface QuickStart {
+  /** As missões da primeira semana, na ordem em que devem ser feitas. */
+  missionIds: string[];
+  why: string;
+}
+
 export interface Gate {
   value: GateValue;
   edition: string;
@@ -91,6 +97,7 @@ export interface TrailResult {
   adjustments: AppliedAdjustment[];
   prerequisiteMissionIds: string[];
   ritualMissionId: string;
+  quickStart: QuickStart;
   phases: TrailPhase[];
   missions: TrailMission[];
   estimate: { totalHours: number; weeks: number; hoursPerWeek: number };
@@ -212,6 +219,26 @@ function applyAdjustments(
   return { applied, missionIds, addedBy, launchKind, essentialMode };
 }
 
+/**
+ * O começo da trilha. A regra mora no seed; aqui só interpretamos e filtramos pelo que
+ * realmente está na trilha da pessoa — indicar missão que ela não tem seria mentira.
+ */
+function resolveQuickStart(
+  ctx: AdjustmentContext,
+  missionIds: string[],
+  board: BoardFile,
+): QuickStart {
+  const regra =
+    board.quick_start.overrides.find((override) => matchesCondition(override.when, ctx)) ??
+    board.quick_start.default;
+
+  const disponiveis = new Set(missionIds);
+  return {
+    missionIds: regra.missions.filter((id) => disponiveis.has(id)),
+    why: regra.why,
+  };
+}
+
 function fillTemplate(template: string, values: Record<string, string | number>): string {
   return template.replace(/\{(\w+)\}/g, (match, key: string) =>
     key in values ? String(values[key]) : match,
@@ -325,6 +352,7 @@ export function generateTrail(
     adjustments: outcome.applied,
     prerequisiteMissionIds: prerequisiteIds,
     ritualMissionId: RITUAL_MISSION_ID,
+    quickStart: resolveQuickStart(ctx, outcome.missionIds, board),
     phases: trailPhases,
     missions,
     estimate: { totalHours, weeks, hoursPerWeek },

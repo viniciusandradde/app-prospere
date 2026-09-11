@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { requireUser } from '@/lib/auth';
-import { getActiveTrail, getWeeklyRitual } from '@/lib/queries';
+import { getActiveTrail, getWeeklyRitual, weekNumbersFromTrail } from '@/lib/queries';
 import { dataBR, weekStart } from '@/lib/utils';
 import { ReviewForm } from './review-form';
 
@@ -26,6 +26,8 @@ export default async function RitualPage() {
   const parsed = atual ? revisaoSemanalSchema.safeParse(atual.data) : null;
   const initial: RevisaoSemanal | null = parsed?.success ? parsed.data : null;
   const meta = trail.plan.goal.salesPerWeek;
+  // Os números que a pessoa já registrou nas missões desta semana — ela não digita duas vezes.
+  const registrados = weekNumbersFromTrail(trail, periodStart);
   const historico = entries.slice(0, 8).reverse();
   const maior = Math.max(meta, ...historico.map((entry) => Number(entry.metricValue ?? 0)), 1);
 
@@ -87,6 +89,7 @@ export default async function RitualPage() {
         initial={initial}
         needsPivot={requiresPivotBlock(reviewNumber)}
         metaDaSemana={meta}
+        registrados={registrados}
       />
 
       {entries.length > 0 ? (

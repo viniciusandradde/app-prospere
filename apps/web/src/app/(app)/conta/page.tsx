@@ -2,14 +2,22 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { requireUser } from '@/lib/auth';
+import { isAiEnabled } from '@/lib/ai';
+import { getDb, schema } from '@/db';
+import { eq } from 'drizzle-orm';
 import { getWeeklyRitual } from '@/lib/queries';
-import { DangerZone, ReminderSettings } from './account-client';
+import { AiConsent, DangerZone, ReminderSettings } from './account-client';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ContaPage() {
   const user = await requireUser();
   const ritual = await getWeeklyRitual(user.workspaceId);
+  const [conta] = await getDb()
+    .select({ aiConsentAt: schema.users.aiConsentAt })
+    .from(schema.users)
+    .where(eq(schema.users.id, user.id))
+    .limit(1);
 
   return (
     <main className="flex flex-col gap-6">
@@ -28,6 +36,15 @@ export default async function ContaPage() {
             timeLocal={ritual?.ritual.timeLocal ?? '18:00:00'}
             reminder={ritual?.ritual.reminder ?? true}
           />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Escrita assistida por IA</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AiConsent granted={Boolean(conta?.aiConsentAt)} available={isAiEnabled()} />
         </CardContent>
       </Card>
 

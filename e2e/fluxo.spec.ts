@@ -149,6 +149,75 @@ test('operador com clientes pagantes vira A4 e não recebe as missões de valida
   await expect(page.getByText('Seed Launch (pré-venda)')).toHaveCount(0);
 });
 
+test('a primeira semana termina com a oferta, e a lista de contatos fica dentro do app', async ({
+  page,
+}) => {
+  const email = `comeco+${Date.now()}@exemplo.com.br`;
+  await entrar(page, email);
+  await responderBoard(page, {
+    arquetipo: /Tenho uma ideia ou um produto\/serviço/,
+    produto: 'Tenho um protótipo ou versão inicial',
+    vendas: 'Já vendi, mas de forma irregular',
+  });
+  await page.waitForURL('**/trilha');
+
+  // Comece por aqui: cliente ideal → oferta → pitch, nessa ordem.
+  const comeco = page.getByRole('region', { name: 'Comece por aqui' });
+  await expect(comeco.getByRole('link')).toHaveCount(3);
+  await expect(comeco.getByRole('link').first()).toContainText('Cliente ideal e dor');
+  await expect(comeco.getByRole('link').nth(1)).toContainText('Construir a oferta');
+  await expect(page.getByText('Sua primeira semana termina com uma oferta escrita')).toBeVisible();
+
+  // Hoje aponta para a primeira missão do começo, não para a primeira da trilha.
+  await page.goto('/hoje');
+  await expect(page.getByText('Primeira semana')).toBeVisible();
+  await expect(page.getByText('Cliente ideal e dor')).toBeVisible();
+
+  // O plano de relacionamentos é preenchido no app, sem planilha por fora.
+  await page.goto('/missao/ENG-01');
+  await expect(page.getByRole('heading', { name: 'Plano de relacionamentos (30 nomes)' })).toBeVisible();
+  const linha = page.getByRole('group', { name: 'Linha 1' });
+  await linha.getByLabel('Nome').fill('Ana Paula');
+  await linha.getByLabel('Como eu ajudo primeiro').fill('Indico duas clientes');
+  await page.getByRole('button', { name: 'Salvar lista' }).click();
+  await expect(page.getByText('Salvo.')).toBeVisible();
+  await expect(page.getByText('1 de 30')).toBeVisible();
+
+  // E sobrevive a um recarregamento.
+  await page.reload();
+  await expect(page.getByRole('group', { name: 'Linha 1' }).getByLabel('Nome')).toHaveValue('Ana Paula');
+});
+
+test('a Revisão Semanal já vem com os números registrados nas missões', async ({ page }) => {
+  const email = `numeros+${Date.now()}@exemplo.com.br`;
+  await entrar(page, email);
+  await responderBoard(page, {
+    arquetipo: /Tenho uma ideia ou um produto\/serviço/,
+    produto: 'Tenho um protótipo ou versão inicial',
+    vendas: 'Já vendi, mas de forma irregular',
+  });
+  await page.waitForURL('**/trilha');
+
+  // Duas entrevistas registradas hoje contam como duas conversas da semana.
+  await page.goto('/missao/SON-01');
+  for (const nota of ['Ana, grávida de 6 meses', 'Júlia, indicada pela Ana']) {
+    await page.getByLabel('Quem foi e a frase que ficou').fill(nota);
+    await page.getByRole('button', { name: 'Registrar' }).click();
+    await expect(page.getByText(`${['Ana, grávida de 6 meses', 'Júlia, indicada pela Ana'].indexOf(nota) + 1} de 10`)).toBeVisible();
+  }
+
+  await page.goto('/ritual');
+  await expect(page.getByLabel('Conversas', { exact: true })).toHaveValue('2');
+  await expect(page.getByText(/vieram dos registros que você fez/)).toBeVisible();
+
+  // O número continua editável: quem manda é a pessoa.
+  await page.getByLabel('Conversas', { exact: true }).fill('3');
+  await page.getByLabel('Vitória 1').fill('Primeira pré-venda');
+  await page.getByLabel('Prioridade 1').fill('Convidar a lista');
+  await page.getByRole('button', { name: 'Fechar a revisão' }).click();
+  await expect(page.getByText(/Revisão salva/)).toBeVisible();
+});
+
 test('gate de fora de escopo registra lista de espera em vez de gerar trilha', async ({ page }) => {
   const email = `escala+${Date.now()}@exemplo.com.br`;
   await entrar(page, email);

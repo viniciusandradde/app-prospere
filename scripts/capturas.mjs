@@ -115,6 +115,27 @@ for (const nota of [
 }
 await shot(page, '06-missao-contador');
 
+// ---------- missão do tipo lista ----------
+await page.goto(`${BASE}/missao/ENG-01`);
+const pessoas = [
+  ['Ana Paula', 'cliente', 'Já foi minha paciente e virou mãe', 'Mando o guia do 2º trimestre', 'Chamar para um café', '15/09'],
+  ['Dra. Helena', 'mentor', 'Nutri há 20 anos, atende gestantes', 'Indico o podcast dela', 'Pedir 30 min de conversa', '17/09'],
+  ['Camila (obstetra)', 'parceiro', 'Atende o mesmo público, não concorre', 'Encaminho minhas pacientes', 'Propor indicação mútua', '19/09'],
+];
+for (const [i, pessoa] of pessoas.entries()) {
+  if (i > 0) await page.getByRole('button', { name: 'Adicionar pessoa' }).click();
+  const linha = page.getByRole('group', { name: `Linha ${i + 1}` });
+  await linha.getByLabel('Nome').fill(pessoa[0]);
+  await linha.getByLabel('Tipo').selectOption(pessoa[1]);
+  await linha.getByLabel('Por que importa').fill(pessoa[2]);
+  await linha.getByLabel('Como eu ajudo primeiro').fill(pessoa[3]);
+  await linha.getByLabel('Próximo passo').fill(pessoa[4]);
+  await linha.getByLabel('Quando').fill(pessoa[5]);
+}
+await page.getByRole('button', { name: 'Salvar lista' }).click();
+await page.getByText('Salvo.').waitFor();
+await shot(page, '07-missao-lista');
+
 // ---------- ferramenta: quadro ----------
 await page.goto(`${BASE}/ferramenta/quadro`);
 await page.getByRole('button', { name: 'Novo cartão' }).click();
@@ -127,7 +148,7 @@ await page.getByLabel('Critério de sucesso').last().fill('3 pré-vendas em 14 d
 await page.getByRole('button', { name: 'Rodando', exact: true }).last().click();
 await page.getByRole('button', { name: 'Salvar quadro' }).click();
 await page.getByText('Salvo.').waitFor();
-await shot(page, '07-ferramenta-quadro');
+await shot(page, '08-ferramenta-quadro');
 
 // ---------- ferramenta: oferta ----------
 await page.goto(`${BASE}/ferramenta/oferta`);
@@ -171,7 +192,7 @@ await marcar('Escassez', 'Aplicado e verdadeiro', '4 vagas é o limite real da m
 await marcar('Unidade', 'Aplicado e verdadeiro', 'Também fui mãe de primeira viagem');
 await page.getByRole('button', { name: 'Finalizar oferta' }).click();
 await page.getByText('Salvo.').waitFor();
-await shot(page, '08-ferramenta-oferta');
+await shot(page, '09-ferramenta-oferta');
 
 // ---------- ritual ----------
 await page.goto(`${BASE}/ritual`);
@@ -195,11 +216,11 @@ await page.getByLabel('Prioridade 2').fill('Fechar o cardápio do 2º trimestre'
 await page.getByLabel('Prioridade 3').fill('Pedir depoimento em vídeo para a Ana');
 await page.getByRole('button', { name: 'Fechar a revisão' }).click();
 await page.getByText(/Revisão salva/).waitFor();
-await shot(page, '09-ritual-revisao-semanal');
+await shot(page, '10-ritual-revisao-semanal');
 
 // ---------- hoje ----------
 await page.goto(`${BASE}/hoje`);
-await shot(page, '10-hoje');
+await shot(page, '11-hoje');
 await context.close();
 
 // ---------- celular (360 px) ----------
@@ -212,9 +233,9 @@ await sql(
 );
 await cel.goto(`${BASE}/entrar/verificar?token=${tokenCel}`);
 await cel.goto(`${BASE}/hoje`);
-await shot(cel, '11-celular-hoje');
+await shot(cel, '12-celular-hoje');
 await cel.goto(`${BASE}/trilha`);
-await shot(cel, '12-celular-trilha');
+await shot(cel, '13-celular-trilha');
 await mobile.close();
 
 await browser.close();

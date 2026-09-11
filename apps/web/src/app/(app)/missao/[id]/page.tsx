@@ -5,8 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { requireUser } from '@/lib/auth';
+import { isAiEnabled } from '@/lib/ai';
 import { getActiveTrail, toMissionViews } from '@/lib/queries';
-import { CompleteButton, Counter, ResponseForm } from './mission-client';
+import { CompleteButton, Counter, ResponseForm, RowList } from './mission-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,7 @@ export default async function MissaoPage({ params }: { params: Promise<{ id: str
   if (!mission) notFound();
 
   const tool = mission.toolId ? toolById.get(mission.toolId) : undefined;
+  const aiEnabled = isAiEnabled();
   const done = mission.row.status === 'done';
 
   return (
@@ -66,9 +68,22 @@ export default async function MissaoPage({ params }: { params: Promise<{ id: str
           <CardContent>
             <ResponseForm
               trailMissionId={mission.row.id}
+              missionId={mission.id}
               sections={mission.template}
               initial={mission.row.responseText}
+              aiEnabled={aiEnabled}
             />
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {mission.list ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Sua lista</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RowList trailMissionId={mission.row.id} list={mission.list} initial={mission.row.rows} />
           </CardContent>
         </Card>
       ) : null}
@@ -105,11 +120,10 @@ export default async function MissaoPage({ params }: { params: Promise<{ id: str
       {mission.external ? (
         <Card>
           <CardHeader>
-            <CardTitle>Ferramenta externa</CardTitle>
+            <CardTitle>O que preparar por fora</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            Esta missão usa uma ferramenta de fora do app: {mission.external}. Traga o resultado de
-            volta para cá marcando a missão como concluída.
+            Esta missão exige {mission.external}. O registro do que você decidir fica aqui.
           </CardContent>
         </Card>
       ) : null}

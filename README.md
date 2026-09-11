@@ -49,6 +49,11 @@ O PROSPERE não ensina. Ele **faz junto**:
 4. **Ferramentas** que produzem artefatos reutilizáveis (oferta, experimento, revisão).
 5. **Ritual semanal** com o número que importa, streak e a decisão mensal de pivotar ou perseverar.
 
+A primeira semana termina com uma oferta escrita — não com semanas de preparação. E, quando há
+chave de IA configurada, cada campo pode começar por um **rascunho** montado a partir do que
+você já respondeu ([ADR-010](docs/adr/010-rascunhos-por-ia.md)): a IA escreve a primeira versão,
+você corrige. Ela nunca decide sua trilha nem inventa número.
+
 ## O método PROSPERE
 
 Oito fases, uma pergunta cada. O nome é o método:
@@ -115,9 +120,9 @@ Decisões registradas como ADRs em [`docs/05-ARQUITETURA-E-ADRS.md`](docs/05-ARQ
 
 | | |
 |:--|:--|
-| ![Trilha](docs/capturas/04-trilha.png) | ![Hoje](docs/capturas/10-hoje.png) |
-| **Sua trilha** — arquétipo, meta decomposta e o porquê de cada ajuste | **Hoje** — a próxima missão, o número da semana e o streak |
-| ![Construtor de Oferta](docs/capturas/08-ferramenta-oferta.png) | ![Revisão Semanal](docs/capturas/09-ritual-revisao-semanal.png) |
+| ![Trilha](docs/capturas/04-trilha.png) | ![Hoje](docs/capturas/11-hoje.png) |
+| **Sua trilha** — o bloco "Comece por aqui", a meta decomposta e o porquê de cada ajuste | **Hoje** — a próxima missão, o número da semana e o streak |
+| ![Construtor de Oferta](docs/capturas/09-ferramenta-oferta.png) | ![Revisão Semanal](docs/capturas/10-ritual-revisao-semanal.png) |
 | **Construtor de Oferta** — a auditoria dos 7 princípios barra gatilho artificial | **Revisão Semanal** — 3 vitórias, os números, 3 prioridades |
 
 Todas as telas em [`docs/capturas/`](docs/capturas), geradas do app rodando por

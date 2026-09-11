@@ -15,6 +15,14 @@ pnpm dev                                          # http://localhost:3000
 
 Sem `EMAIL_API_KEY`, o link de acesso aparece na própria tela de login (fora de produção).
 
+## Verificar antes do beta
+
+- **Rascunhos por IA**: configure `ANTHROPIC_API_KEY` e exercite os 5 alvos (promessa,
+  benefícios, objeções, hipótese, seções de missão). A lógica pura tem teste; a chamada real
+  nunca rodou. Confira especialmente se o modelo respeita "não inventar número".
+- **Custo**: acompanhe `ai_draft_requested` por usuário na primeira semana de beta. A conta
+  estimada é de US$ 0,01 por rascunho.
+
 ## O que falta para o beta (semana 4 do PRD)
 
 1. **Deploy**: subir `docker/Dockerfile` no Dokploy a partir de `main`; configurar

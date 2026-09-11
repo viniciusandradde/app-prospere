@@ -16,6 +16,7 @@ async function ownedMission(workspaceId: string, trailMissionId: string) {
       missionId: schema.trailMissions.missionId,
       status: schema.trailMissions.status,
       counter: schema.trailMissions.counter,
+      rows: schema.trailMissions.rows,
       trailId: schema.trailMissions.trailId,
     })
     .from(schema.trailMissions)
@@ -120,6 +121,25 @@ export async function addCounterEntryAction(
 
   revalidatePath(`/missao/${row.missionId}`);
   return { status: 'ok', count: entries.length };
+}
+
+/** Linhas das missões do tipo lista (plano de relacionamentos, por exemplo). */
+export async function saveRowsAction(
+  trailMissionId: string,
+  rows: Array<Record<string, string>>,
+): Promise<{ status: 'ok'; count: number }> {
+  const user = await requireUser();
+  const row = await ownedMission(user.workspaceId, trailMissionId);
+
+  const limpas = rows.filter((linha) => Object.values(linha).some((valor) => valor.trim() !== ''));
+
+  await getDb()
+    .update(schema.trailMissions)
+    .set({ rows: limpas, status: row.status === 'done' ? 'done' : 'doing' })
+    .where(eq(schema.trailMissions.id, trailMissionId));
+
+  revalidatePath(`/missao/${row.missionId}`);
+  return { status: 'ok', count: limpas.length };
 }
 
 export async function removeCounterEntryAction(

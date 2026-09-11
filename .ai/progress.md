@@ -54,3 +54,25 @@
 - Documentação atualizada para quem for continuar no Claude Code: `CLAUDE.md` reescrito
   (comandos, mapa do código, armadilhas), `docs/08` virou guia de continuação, `docs/00` e
   `docs/05` com a estrutura real, CONTRIBUTING com os comandos de verificação.
+
+## 2026-09-11 — Análise de aderência e as quatro mudanças que ela gerou
+Medições que motivaram tudo: trilha A3 = 24 missões, 88,75 h, **39 campos de texto livre** +
+40 registros datados; 2.560 combinações de board geram só **15 conjuntos de missões distintos**
+(15 fixas, variação máxima de 7). Ou seja: muito atrito e menos personalização do que a
+promessa sugere.
+
+1. **Primeira semana com resultado** — `quick_start` no board (regra versionada) e `quickStart`
+   no motor: cliente ideal → oferta → pitch (ou forças → modelo → cliente ideal, para quem ainda
+   não sabe o que vender). Bloco "Comece por aqui" na trilha; `nextMission` e a tela Hoje o respeitam.
+2. **Revisão Semanal pré-preenchida** — contadores ganharam `metric` no catálogo e
+   `numbersFromCounters` deriva contatos/conversas/vendas da semana. Editável por cima.
+3. **Nada mais sai do app** — ORG-09 e ENG-05 viraram resposta guiada; ENG-01 virou lista
+   estruturada de 30 nomes (nova coluna `trail_missions.rows`). Zero missões do tipo `external`;
+   o que resta é dica do que preparar por fora (conta bancária, hospedagem da página).
+4. **Rascunhos por IA** (ADR-010) — promessa, benefícios, objeções, hipótese e seções de missão.
+   Consentimento por conta (`users.ai_consent_at`), validação Zod, guardrails no prompt, eventos
+   `ai_draft_requested`/`ai_draft_resolved`. Board em `2.1.0-negocio`.
+
+83 testes unitários e 12 e2e verdes. A camada de IA **não foi testada contra a API real** —
+não há `ANTHROPIC_API_KEY` neste ambiente; as partes puras (prompt, parsing, validação) têm
+13 testes.

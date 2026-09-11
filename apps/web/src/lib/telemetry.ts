@@ -10,7 +10,9 @@ export type EventName =
   | 'mission_completed'
   | 'artifact_saved'
   | 'review_completed'
-  | 'export_done';
+  | 'export_done'
+  | 'ai_draft_requested'
+  | 'ai_draft_resolved';
 
 interface TrackOptions {
   workspaceId?: string | null;

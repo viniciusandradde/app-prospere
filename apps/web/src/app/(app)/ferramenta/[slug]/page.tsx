@@ -10,6 +10,7 @@ import {
 } from '@prospere/content';
 import { Button } from '@/components/ui/button';
 import { requireUser } from '@/lib/auth';
+import { isAiEnabled } from '@/lib/ai';
 import { getArtifact } from '@/lib/queries';
 import { OfertaForm } from './oferta-form';
 import { QuadroForm } from './quadro-form';
@@ -27,6 +28,7 @@ export default async function FerramentaPage({ params }: { params: Promise<{ slu
 
   const user = await requireUser();
   const artifact = await getArtifact(user.workspaceId, tool.id);
+  const aiEnabled = isAiEnabled();
 
   return (
     <main className="flex flex-col gap-6">
@@ -39,9 +41,9 @@ export default async function FerramentaPage({ params }: { params: Promise<{ slu
       </header>
 
       {tool.id === 'T-SON-03' ? (
-        <QuadroForm initial={parseQuadro(artifact?.data)} />
+        <QuadroForm initial={parseQuadro(artifact?.data)} aiEnabled={aiEnabled} />
       ) : (
-        <OfertaForm initial={parseOferta(artifact?.data)} />
+        <OfertaForm initial={parseOferta(artifact?.data)} aiEnabled={aiEnabled} />
       )}
 
       <Button asChild variant="outline" className="self-start">

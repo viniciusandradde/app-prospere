@@ -19,7 +19,8 @@ const board = boardJson as unknown as {
     tools: Record<string, string>;
     counters_only: string[];
     response_templates: string[];
-    external_templates: Record<string, string>;
+    lists: string[];
+    external_hints: Record<string, string>;
   };
 };
 
@@ -57,7 +58,10 @@ describe('integridade do catálogo', () => {
       if (mission.kind === 'template') expect(mission.template?.length).toBeGreaterThan(0);
       if (mission.kind === 'counter') expect(mission.counter?.target).toBeGreaterThan(0);
       if (mission.kind === 'tool') expect(toolById.has(mission.toolId!)).toBe(true);
-      if (mission.kind === 'external') expect(mission.external).toBeTruthy();
+      if (mission.kind === 'list') {
+        expect(mission.list?.columns.length).toBeGreaterThan(1);
+        expect(mission.list?.target).toBeGreaterThan(0);
+      }
     }
   });
 
@@ -115,10 +119,29 @@ describe('catálogo × board ativo', () => {
     }
   });
 
-  it('as missões de template externo apontam para a ferramenta externa', () => {
-    for (const missionId of Object.keys(board.mission_bindings.external_templates)) {
-      const mission = missionById.get(missionId);
-      if (mission?.kind === 'external') expect(mission.external).toBeTruthy();
+  it('toda missão guarda o próprio artefato no app', () => {
+    for (const mission of missions) {
+      const guardaArtefato =
+        mission.kind === 'template' || mission.kind === 'list' || mission.kind === 'tool' || mission.kind === 'counter';
+      expect(guardaArtefato, `${mission.id} não guarda artefato`).toBe(true);
+    }
+  });
+
+  it('as dicas de ferramenta externa do board batem com o catálogo', () => {
+    for (const missionId of Object.keys(board.mission_bindings.external_hints)) {
+      expect(missionById.get(missionId)?.external).toBeTruthy();
+    }
+  });
+
+  it('as missões marcadas como lista no board têm colunas', () => {
+    for (const missionId of board.mission_bindings.lists) {
+      expect(missionById.get(missionId)?.list?.columns.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('as missões de resposta guiada do board têm template', () => {
+    for (const missionId of board.mission_bindings.response_templates) {
+      expect(missionById.get(missionId)?.template?.length, missionId).toBeGreaterThan(0);
     }
   });
 });

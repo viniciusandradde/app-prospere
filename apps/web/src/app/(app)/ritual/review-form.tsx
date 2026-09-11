@@ -6,6 +6,7 @@ import {
   DECISION_LABELS,
   emptyRevisao,
   type RevisaoSemanal,
+  type WeekNumbers,
 } from '@prospere/content';
 import { saveReviewAction, type SaveReviewState } from '@/actions/ritual';
 import { Button } from '@/components/ui/button';
@@ -19,15 +20,25 @@ export function ReviewForm({
   initial,
   needsPivot,
   metaDaSemana,
+  registrados,
 }: {
   periodStart: string;
   initial: RevisaoSemanal | null;
   needsPivot: boolean;
   metaDaSemana: number;
+  /** Números já registrados nas missões desta semana. */
+  registrados: WeekNumbers;
 }) {
-  const [values, setValues] = useState<RevisaoSemanal>(
-    initial ?? { ...emptyRevisao(periodStart), meta_da_semana: metaDaSemana },
-  );
+  const [values, setValues] = useState<RevisaoSemanal>(() => {
+    if (initial) return initial;
+    const vazia = emptyRevisao(periodStart);
+    return {
+      ...vazia,
+      meta_da_semana: metaDaSemana,
+      // A revisão começa com o que já foi registrado; tudo continua editável.
+      numeros: { ...vazia.numeros, ...registrados },
+    };
+  });
   const [state, setState] = useState<SaveReviewState | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -43,6 +54,8 @@ export function ReviewForm({
 
   const setNumero = (key: keyof RevisaoSemanal['numeros'], value: number) =>
     setValues((current) => ({ ...current, numeros: { ...current.numeros, [key]: value } }));
+
+  const temRegistros = Object.values(registrados).some((valor) => valor > 0);
 
   const issueFor = (path: string) =>
     state?.issues?.find((issue) => issue.path === path || issue.path.startsWith(`${path}.`))?.message;
@@ -93,6 +106,12 @@ export function ReviewForm({
           <p className="text-sm text-muted-foreground">
             Os números da semana. A meta desta trilha é {metaDaSemana} por semana.
           </p>
+          {temRegistros ? (
+            <p className="text-xs text-muted-foreground">
+              Contatos, conversas e vendas vieram dos registros que você fez nas missões desta
+              semana. Corrija se faltar alguma coisa.
+            </p>
+          ) : null}
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">

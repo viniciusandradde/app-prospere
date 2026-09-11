@@ -24,6 +24,7 @@ ADRs escritos neste repositório:
 | [007](007-autenticacao-por-link-magico.md) | Autenticação própria por link mágico, sem Auth.js |
 | [008](008-sem-tabelas-de-catalogo.md) | Catálogo só em código, sem tabelas e sem seed |
 | [009](009-provedor-de-email.md) | Resend como provedor de e-mail transacional |
+| [010](010-rascunhos-por-ia.md) | IA escreve rascunhos; o motor continua decidindo |
 
 Decisões pendentes (ver questões abertas no PRD): cifra de campos financeiros e âncoras do
 teste de preço. O provedor de e-mail foi decidido no ADR-009.

@@ -13,13 +13,14 @@ import {
   type Oferta,
 } from '@prospere/content';
 import { saveArtifactAction, type SaveArtifactState } from '@/actions/tools';
+import { DraftButton } from '@/components/draft-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
-export function OfertaForm({ initial }: { initial: Oferta }) {
+export function OfertaForm({ initial, aiEnabled }: { initial: Oferta; aiEnabled: boolean }) {
   const [state, setState] = useState<SaveArtifactState | null>(null);
   const [pending, startTransition] = useTransition();
   const { register, control, handleSubmit, watch, setValue } = useForm<Oferta>({
@@ -47,7 +48,19 @@ export function OfertaForm({ initial }: { initial: Oferta }) {
           <CardTitle>A promessa</CardTitle>
           <p className="text-sm text-muted-foreground">{promessa(atual)}</p>
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-3">
+        <CardContent className="flex flex-col gap-4">
+          {aiEnabled ? (
+            <DraftButton<{ cliente: string; resultado: string; obstaculo: string }>
+              target="oferta.promessa"
+              label="Escrever a promessa para mim"
+              onApply={(data) => {
+                setValue('cliente', data.cliente);
+                setValue('resultado', data.resultado);
+                setValue('obstaculo', data.obstaculo);
+              }}
+            />
+          ) : null}
+          <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Ajudo…" {...(issueFor('cliente') ? { error: issueFor('cliente') } : {})}>
             <Input {...register('cliente')} placeholder="nutricionistas autônomas" />
           </Field>
@@ -57,6 +70,7 @@ export function OfertaForm({ initial }: { initial: Oferta }) {
           <Field label="sem…">
             <Input {...register('obstaculo')} placeholder="depender de indicação" />
           </Field>
+          </div>
         </CardContent>
       </Card>
 
@@ -64,7 +78,18 @@ export function OfertaForm({ initial }: { initial: Oferta }) {
         <CardHeader>
           <CardTitle>Benefícios</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
+        <CardContent className="flex flex-col gap-4">
+          {aiEnabled ? (
+            <DraftButton<{ emocionais: string[]; praticos: string[] }>
+              target="oferta.beneficios"
+              label="Escrever os benefícios para mim"
+              onApply={(data) => {
+                data.emocionais.forEach((texto, i) => setValue(`beneficios_emocionais.${i}` as const, texto));
+                data.praticos.forEach((texto, i) => setValue(`beneficios_praticos.${i}` as const, texto));
+              }}
+            />
+          ) : null}
+          <div className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-3">
             <p className="text-sm font-medium">O que muda para a pessoa</p>
             {[0, 1, 2].map((index) => (
@@ -86,6 +111,7 @@ export function OfertaForm({ initial }: { initial: Oferta }) {
                 placeholder={`Benefício prático ${index + 1}`}
               />
             ))}
+          </div>
           </div>
         </CardContent>
       </Card>
@@ -126,6 +152,15 @@ export function OfertaForm({ initial }: { initial: Oferta }) {
           </p>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
+          {aiEnabled ? (
+            <DraftButton<{ objecoes: Array<{ objecao: string; resposta: string; prova: string }> }>
+              target="oferta.objecoes"
+              label="Escrever as objeções para mim"
+              onApply={(data) => {
+                objecoes.replace(data.objecoes);
+              }}
+            />
+          ) : null}
           {objecoes.fields.map((field, index) => (
             <div
               key={field.id}

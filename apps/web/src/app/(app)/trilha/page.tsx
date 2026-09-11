@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { CheckCircle2, Circle, Lock } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Circle, Lock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +18,11 @@ export default async function TrilhaPage() {
 
   const views = toMissionViews(trail);
   const phases = phaseProgress(trail, views);
+  const comeco = trail.plan.quickStart.missionIds.flatMap((id) => {
+    const view = views.find((candidate) => candidate.id === id);
+    return view ? [view] : [];
+  });
+  const comecoPendente = comeco.filter((view) => view.row.status !== 'done');
   const { plan } = trail;
   const done = views.filter((v) => v.row.status === 'done').length;
 
@@ -58,6 +63,38 @@ export default async function TrilhaPage() {
           </p>
         </div>
       </header>
+
+      {comecoPendente.length > 0 ? (
+        <Card className="border-primary" role="region" aria-label="Comece por aqui">
+          <CardHeader>
+            <CardTitle>Comece por aqui</CardTitle>
+            <p className="text-sm text-muted-foreground">{plan.quickStart.why}</p>
+          </CardHeader>
+          <CardContent className="flex flex-col">
+            {comeco.map((mission, indice) => {
+              const concluida = mission.row.status === 'done';
+              return (
+                <Link
+                  key={mission.id}
+                  href={`/missao/${mission.id}`}
+                  className="flex items-center gap-3 rounded-lg border-b border-border px-2 py-3 last:border-0 hover:bg-muted"
+                >
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                    {concluida ? <CheckCircle2 className="size-4" aria-hidden /> : indice + 1}
+                  </span>
+                  <span className="flex flex-1 flex-col">
+                    <span className={concluida ? 'text-muted-foreground line-through' : ''}>
+                      {mission.title}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{mission.result}</span>
+                  </span>
+                  <ArrowRight className="size-4 text-muted-foreground" aria-hidden />
+                </Link>
+              );
+            })}
+          </CardContent>
+        </Card>
+      ) : null}
 
       {plan.explanation.adjustments.length > 0 ? (
         <Card>

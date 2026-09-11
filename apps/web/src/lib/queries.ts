@@ -1,6 +1,12 @@
 import 'server-only';
 import { and, asc, desc, eq } from 'drizzle-orm';
-import { missionById, type Mission } from '@prospere/content';
+import {
+  missionById,
+  numbersFromCounters,
+  type Mission,
+  type MissionCounterState,
+  type WeekNumbers,
+} from '@prospere/content';
 import type { TrailResult } from '@prospere/engine';
 import { getDb, schema } from '@/db';
 
@@ -12,6 +18,7 @@ export interface TrailMissionRow {
   completedAt: Date | null;
   responseText: Record<string, string>;
   counter: Array<{ date: string; note: string }>;
+  rows: Array<Record<string, string>>;
 }
 
 export interface ActiveTrail {
@@ -57,6 +64,7 @@ export async function getActiveTrail(workspaceId: string): Promise<ActiveTrail |
       completedAt: row.completedAt,
       responseText: (row.responseText ?? {}) as Record<string, string>,
       counter: (row.counter ?? []) as Array<{ date: string; note: string }>,
+      rows: (row.rows ?? []) as Array<Record<string, string>>,
     })),
   };
 }
@@ -127,9 +135,29 @@ export function phaseProgress(trail: ActiveTrail, views: MissionView[]): PhasePr
   });
 }
 
-/** A próxima missão: a primeira não concluída e não bloqueada. */
-export function nextMission(views: MissionView[]): MissionView | null {
-  return views.find((view) => view.row.status !== 'done' && view.blockedBy.length === 0) ?? null;
+const disponivel = (view: MissionView): boolean =>
+  view.row.status !== 'done' && view.blockedBy.length === 0;
+
+/**
+ * A próxima missão. As missões do "comece por aqui" vêm primeiro, na ordem definida pelo
+ * board — é o que faz a primeira semana terminar com algo pronto para mostrar.
+ */
+export function nextMission(views: MissionView[], quickStartIds: string[] = []): MissionView | null {
+  for (const id of quickStartIds) {
+    const view = views.find((candidate) => candidate.id === id);
+    if (view && disponivel(view)) return view;
+  }
+  return views.find(disponivel) ?? null;
+}
+
+/** Estado dos contadores da trilha, para derivar os números da semana. */
+export function counterStates(trail: ActiveTrail): MissionCounterState[] {
+  return trail.missions.map((row) => ({ missionId: row.missionId, entries: row.counter }));
+}
+
+/** Números da semana já registrados nas missões (a Revisão Semanal parte deles). */
+export function weekNumbersFromTrail(trail: ActiveTrail, weekStart: string): WeekNumbers {
+  return numbersFromCounters(counterStates(trail), weekStart);
 }
 
 export async function getArtifact(workspaceId: string, toolId: string) {

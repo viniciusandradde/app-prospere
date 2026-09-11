@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { setAiConsentAction } from '@/actions/ai';
 import { deleteAccountAction } from '@/actions/account';
 import { signOutAction } from '@/actions/auth';
 import { updateReminderAction } from '@/actions/ritual';
@@ -80,6 +81,45 @@ export function ReminderSettings({
         </Button>
         {saved ? <span className="text-sm text-muted-foreground">Salvo.</span> : null}
       </div>
+    </div>
+  );
+}
+
+export function AiConsent({ granted, available }: { granted: boolean; available: boolean }) {
+  const [ativo, setAtivo] = useState(granted);
+  const [pending, startTransition] = useTransition();
+
+  if (!available) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        A escrita assistida não está ativa neste ambiente.
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-sm text-muted-foreground">
+        Com a autorização ligada, a IA pode ler o que você escreveu nesta trilha — respostas de
+        missão, meta e oferta — para escrever rascunhos que você edita. Ela nunca decide a sua
+        trilha e nunca inventa número. Desligar apaga a autorização; os textos continuam seus.
+      </p>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={ativo}
+          disabled={pending}
+          onChange={(event) => {
+            const proximo = event.target.checked;
+            setAtivo(proximo);
+            startTransition(async () => {
+              await setAiConsentAction(proximo);
+            });
+          }}
+          className="size-4"
+        />
+        Autorizo a IA a ler minha trilha para escrever rascunhos
+      </label>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import {
   type QuadroCma,
 } from '@prospere/content';
 import { saveArtifactAction, type SaveArtifactState } from '@/actions/tools';
+import { DraftButton } from '@/components/draft-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Field } from '@/components/ui/field';
@@ -21,7 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 const nextId = () => `c${Date.now().toString(36)}`;
 
-export function QuadroForm({ initial }: { initial: QuadroCma }) {
+export function QuadroForm({ initial, aiEnabled }: { initial: QuadroCma; aiEnabled: boolean }) {
   const [cards, setCards] = useState<CmaCard[]>(initial.cards);
   const [state, setState] = useState<SaveArtifactState | null>(null);
   const [pending, startTransition] = useTransition();
@@ -99,6 +100,20 @@ export function QuadroForm({ initial }: { initial: QuadroCma }) {
                 <Trash2 aria-hidden />
               </Button>
             </div>
+
+            {aiEnabled ? (
+              <DraftButton<{ hipotese: string; metrica: string; criterio_sucesso: string }>
+                target="quadro.hipotese"
+                label="Escrever a hipótese para mim"
+                onApply={(data) =>
+                  update(card.id, {
+                    hipotese: data.hipotese,
+                    metrica: data.metrica,
+                    criterio_sucesso: data.criterio_sucesso,
+                  })
+                }
+              />
+            ) : null}
 
             <Field
               label="Hipótese"

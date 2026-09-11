@@ -35,6 +35,7 @@ tela de login (só fora de produção). Para entrar: `/entrar` → informe o e-m
 | `pnpm build` | Build de produção do app |
 | `pnpm --filter @prospere/web db:generate` | Gera migration a partir do schema Drizzle |
 | `pnpm email:dns` | Confere os registros DNS que a Resend exige |
+| `pnpm --filter @prospere/web db:push` | Aplica o schema no banco local |
 | `pnpm email:testar <e-mail>` | Envia um e-mail de teste pela Resend |
 
 Antes de dar qualquer tarefa por concluída: `pnpm lint && pnpm typecheck && pnpm test`.
@@ -51,7 +52,7 @@ apps/web/src/
 │   └── api/                  export (Markdown) e cron/lembretes
 ├── actions/                Server Actions: auth, board, mission, tools, ritual, account
 ├── db/schema.ts            13 tabelas Drizzle — a fonte da verdade dos campos
-├── lib/                    auth, queries, email, telemetry, utils
+├── lib/                    auth, queries, email, telemetry, ai/ (rascunhos), utils
 └── components/ui/          primitivas no padrão shadcn/ui (escritas no repo)
 
 packages/engine/            generateTrail(answers, board) — puro, sem UI nem banco
@@ -62,6 +63,11 @@ e2e/                        Playwright: cadastro → board → trilha → missã
 
 **O caminho de uma trilha**: board (7 respostas) → `generateTrail` → snapshot em `trails.plan`
 → `trail_missions` → a UI lê o snapshot + o estado do usuário (`lib/queries.ts`).
+
+**Tipos de missão**: `template` (resposta guiada), `list` (linhas estruturadas), `counter`
+(registros datados), `tool` (uma das 3 ferramentas), `checklist`. Contador com `metric`
+alimenta os números da Revisão Semanal — quem registrou uma conversa não digita de novo.
+O `quickStart` do motor define a primeira semana; `nextMission` o respeita.
 
 ## Stack
 
@@ -78,7 +84,10 @@ Versões fixadas em `docs/adr/000-versoes.md`; subir versão maior exige atualiz
   nome de campo; conferir no schema.
 - **TDD**: teste antes do código em `packages/engine`, `packages/content` e em cada ferramenta.
 - **Motor determinístico** (ADR-001): regras em `seed/board.negocio.json`, interpretadas por
-  `packages/engine`. Mesma entrada, mesma saída — provado por teste. A IA explica, nunca decide.
+  `packages/engine`. Mesma entrada, mesma saída — provado por teste.
+- **IA escreve rascunho, não decide** (ADR-010): ela preenche campos a partir do que a pessoa
+  já respondeu, sempre como rascunho editável, só com consentimento (`users.ai_consent_at`) e
+  validada por Zod antes de tocar o formulário. Nunca inventa número. Trilha é do motor.
 - **Catálogo só em código** (ADR-008): sem tabelas de missão/ferramenta; `mission_id` e `tool_id`
   são texto validado na aplicação e cobertos por teste de integridade.
 - **Tenancy** (ADR-005): toda leitura e escrita filtra por `workspace_id`. Ação que escreve

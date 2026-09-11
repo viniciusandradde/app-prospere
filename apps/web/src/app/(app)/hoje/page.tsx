@@ -16,7 +16,7 @@ export default async function HojePage() {
   if (!trail) redirect('/onboarding/board');
 
   const views = toMissionViews(trail);
-  const proxima = nextMission(views);
+  const proxima = nextMission(views, trail.plan.quickStart.missionIds);
   const ritual = await getWeeklyRitual(user.workspaceId);
   const semanaAtual = weekStart();
   const revisaoFeita = ritual?.entries.some((entry) => entry.periodStart === semanaAtual) ?? false;
@@ -45,6 +45,9 @@ export default async function HojePage() {
         <CardContent className="flex flex-col gap-3">
           {proxima ? (
             <>
+              {trail.plan.quickStart.missionIds.includes(proxima.id) ? (
+                <Badge variant="secondary">Primeira semana</Badge>
+              ) : null}
               <p className="text-lg font-medium">{proxima.title}</p>
               <p className="text-sm text-muted-foreground">{proxima.result}</p>
               <Button asChild className="self-start">

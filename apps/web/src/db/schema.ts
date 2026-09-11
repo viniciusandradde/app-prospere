@@ -31,6 +31,11 @@ export const users = pgTable('users', {
   timezone: text('timezone').notNull().default('America/Campo_Grande'),
   /** LGPD: aceite de termos e privacidade. */
   consentAt: timestamp('consent_at', { withTimezone: true }),
+  /**
+   * LGPD (ADR-006/010): consentimento explícito para enviar o contexto da trilha à IA que
+   * escreve rascunhos. Nulo = nunca aceitou; a IA fica indisponível.
+   */
+  aiConsentAt: timestamp('ai_consent_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
 });
@@ -141,6 +146,8 @@ export const trailMissions = pgTable(
     responseText: jsonb('response_text').notNull().default({}),
     /** Registros datados do contador: [{date, note}]. */
     counter: jsonb('counter').notNull().default([]),
+    /** Linhas das missões do tipo lista: [{id, <coluna>: valor}]. */
+    rows: jsonb('rows').notNull().default([]),
   },
   (table) => [uniqueIndex('trail_missions_trail_mission').on(table.trailId, table.missionId)],
 );

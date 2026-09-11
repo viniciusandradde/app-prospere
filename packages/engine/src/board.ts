@@ -55,11 +55,17 @@ export interface BoardFile {
     labels: Record<string, string>;
   };
   prerequisites: { missions: string[]; ritual: string; note: string };
+  quick_start: {
+    note: string;
+    default: { missions: string[]; why: string };
+    overrides: Array<{ id: string; when: Record<string, unknown>; missions: string[]; why: string }>;
+  };
   missions_by_archetype: Record<string, string[]>;
   mission_bindings: {
     tools: Record<string, string>;
     response_templates: string[];
-    external_templates: Record<string, string>;
+    lists: string[];
+    external_hints: Record<string, string>;
     counters_only: string[];
   };
   adjustments: BoardAdjustment[];
