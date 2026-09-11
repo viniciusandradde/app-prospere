@@ -20,6 +20,7 @@ Sistema que transforma um diagnóstico de 7 perguntas em uma trilha personalizad
 - [Escopo do MVP](#escopo-do-mvp)
 - [Como funciona](#como-funciona)
 - [Arquitetura e stack](#arquitetura-e-stack)
+- [Como é por dentro](#como-é-por-dentro)
 - [Estrutura do repositório](#estrutura-do-repositório)
 - [Começando](#começando)
 - [Roadmap](#roadmap)
@@ -109,6 +110,18 @@ A personalização é **determinística e auditável** (ADR-001): regras version
 | Deploy | Docker → Dokploy (branch `main`) |
 
 Decisões registradas como ADRs em [`docs/05-ARQUITETURA-E-ADRS.md`](docs/05-ARQUITETURA-E-ADRS.md). Schema em [`docs/06-schema.sql`](docs/06-schema.sql) (o MVP usa 11 das 24 tabelas).
+
+## Como é por dentro
+
+| | |
+|:--|:--|
+| ![Trilha](docs/capturas/04-trilha.png) | ![Hoje](docs/capturas/10-hoje.png) |
+| **Sua trilha** — arquétipo, meta decomposta e o porquê de cada ajuste | **Hoje** — a próxima missão, o número da semana e o streak |
+| ![Construtor de Oferta](docs/capturas/08-ferramenta-oferta.png) | ![Revisão Semanal](docs/capturas/09-ritual-revisao-semanal.png) |
+| **Construtor de Oferta** — a auditoria dos 7 princípios barra gatilho artificial | **Revisão Semanal** — 3 vitórias, os números, 3 prioridades |
+
+Todas as telas em [`docs/capturas/`](docs/capturas), geradas do app rodando por
+`node scripts/capturas.mjs`.
 
 ## Estrutura do repositório
 

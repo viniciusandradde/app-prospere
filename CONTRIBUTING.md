@@ -4,19 +4,21 @@ Obrigado pelo interesse. Este documento resume como o trabalho é feito aqui.
 
 ## Antes de escrever código
 
-1. Leia `CLAUDE.md`, `.ai/context.md` e `.ai/handoff.md` — nessa ordem.
+1. Leia `CLAUDE.md` (comandos, mapa do código e regras), `.ai/handoff.md` e `.ai/context.md`.
 2. Confirme o escopo em `docs/04-PRD-MVP-NEGOCIO.md`. O que não está no P0 não entra no P0.
 3. Se a mudança é estrutural (banco, motor de trilha, stack, modelo de dados), abra um ADR
    em `docs/adr/` antes de codar. Use `docs/adr/000-template.md`.
 
 ## Regras não negociáveis
 
-- **Schema-first.** Alterar `packages/db/schema.ts` → migration → testes → UI.
+- **Schema-first.** Alterar `apps/web/src/db/schema.ts` → migration → testes → UI.
   Nunca assuma nomes de campos: confira no schema.
 - **TDD.** Motor de trilha, schemas de ferramentas e cálculos nascem com teste.
 - **Tenancy.** Toda leitura e escrita de dados de usuário filtra por `workspace_id`.
-- **Motor determinístico.** Regras de trilha vivem em `seed/*.json` + `packages/engine`.
+- **Motor determinístico.** Regras de trilha vivem em `seed/board.negocio.json` + `packages/engine`.
   A IA explica, nunca decide. Mesma entrada, mesma saída — provado por teste.
+- **Catálogo só em código.** Sem tabelas de missão ou ferramenta (ADR-008).
+- **Segredos nunca no repositório.** Chaves vivem em `.env` (ignorado) e no Dokploy.
 - **Idioma.** Textos de UI e conteúdo em pt-BR; código, tabelas e commits em inglês.
 
 ## Regras de conteúdo
@@ -40,6 +42,13 @@ dev  ──(testes locais)──>  PR  ──(review + CI verde)──>  main  �
 - Um PR resolve uma coisa. PR grande demais é sinal de que faltou fatiar.
 - Ao fim de cada sessão, atualize `.ai/progress.md` e `.ai/handoff.md`.
 
+## Antes de abrir o PR
+
+```bash
+pnpm lint && pnpm typecheck && pnpm test     # sempre
+pnpm test:e2e                                # se mexeu em tela ou fluxo
+```
+
 ## Checklist do PR
 
 - [ ] Testes escritos antes do código e passando
@@ -49,6 +58,7 @@ dev  ──(testes locais)──>  PR  ──(review + CI verde)──>  main  �
 - [ ] Filtro por `workspace_id` em toda query
 - [ ] `.ai/progress.md` e `.ai/handoff.md` atualizados
 - [ ] ADR criado se houve decisão estrutural
+- [ ] Nenhum segredo no diff
 
 ## Reportando problemas
 

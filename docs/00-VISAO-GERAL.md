@@ -39,34 +39,45 @@ especialistas** que acompanham cada etapa.
 ## 3. Estrutura do pacote
 
 ```
-prospere/
-├── README.md                     ← este arquivo
-├── CLAUDE.md                     ← instruções para o Claude Code
-├── .ai/                          ← context.md / progress.md / handoff.md (sua convenção multi-IDE)
-├── .claude/agents/               ← 10 subagentes prontos (YAML frontmatter + system prompt)
-├── seed/board.json               ← board completo (6 arquétipos, referência)
+app-prospere/
+├── CLAUDE.md                     ← instruções para o Claude Code (comece por aqui)
+├── .ai/                          ← context.md / progress.md / handoff.md
+├── .claude/agents/               ← 10 subagentes especialistas
+├── apps/web/                     ← o app: board, trilha, missões, ferramentas, ritual
+├── packages/engine/              ← motor de trilha determinístico
+├── packages/content/             ← catálogo como código (missões, ferramentas, livros)
+├── e2e/                          ← Playwright: o fluxo completo no navegador
+├── docker/                       ← Dockerfile (Dokploy) e Postgres local
 ├── seed/board.negocio.json       ← BOARD ATIVO: 7 perguntas, gates, A3/A4, ajustes
-├── scripts/extract-sources.py    ← converte os materiais originais em texto para `sources/` (gitignored)
+├── seed/board.json               ← board completo (referência)
+├── scripts/                      ← extração de fontes, checagens de e-mail
 └── docs/
-    ├── 00-LEIA-ME.md
-    ├── 01-FONTES-E-ANALISE.md    ← o que cada livro/material contribui e onde entra na trilha
-    ├── 02-METODO-PROSPERE.md     ← a metodologia (fácil de aprender): 8 fases, ciclo AAA, arquétipos
-    ├── 03-CONTEUDO-TRILHA.md     ← conteúdo completo: 67 missões, 54 ferramentas, critérios, créditos
+    ├── 00-VISAO-GERAL.md
+    ├── 01-FONTES-E-ANALISE.md    ← o que cada livro contribui e onde entra na trilha
+    ├── 02-METODO-PROSPERE.md     ← a metodologia: 8 fases, ciclo AAA, arquétipos
+    ├── 03-CONTEUDO-TRILHA.md     ← biblioteca completa: 67 missões, 54 ferramentas
     ├── 04-PRD-MVP.md             ← visão completa (referência)
-    ├── 04-PRD-MVP-NEGOCIO.md     ← ESCOPO ATIVO: MVP da edição Negócio (A3/A4), 6 semanas
-    ├── 05-ARQUITETURA-E-ADRS.md  ← stack (Next.js + shadcn/ui + PostgreSQL), decisões, estrutura
-    ├── 06-schema.sql             ← schema PostgreSQL completo (MVP usa 11 tabelas — ver PRD Negócio)
-    ├── 07-AGENTES.md             ← os 10 agentes especialistas (papel no repo + persona no produto)
-    └── 08-PLANO-CLAUDE-CODE.md   ← sprints, prompts iniciais e checklist de execução
+    ├── 04-PRD-MVP-NEGOCIO.md     ← ESCOPO ATIVO: edição Negócio (A3/A4)
+    ├── 05-ARQUITETURA-E-ADRS.md  ← stack, decisões, estrutura
+    ├── 06-schema.sql             ← schema de referência (o executável é o Drizzle)
+    ├── 07-AGENTES.md             ← os 10 agentes especialistas
+    ├── 08-PLANO-CLAUDE-CODE.md   ← como rodar e continuar no Claude Code
+    ├── 09-PESQUISA-MERCADO.md    ← concorrentes, demanda, precificação
+    └── adr/                      ← Architecture Decision Records
 ```
+
+> **O que está implementado**: a edição Negócio — 5 fases, 27 missões e 3 ferramentas. As demais
+> missões e ferramentas seguem em `docs/03` como biblioteca do método, fora do escopo atual.
 
 ## 4. Como usar no Claude Code
 
-1. Descompacte o ZIP: a pasta `prospere/` já é a raiz do repositório (`CLAUDE.md`, `.ai/`, `.claude/`, `docs/`, `seed/`, `scripts/`).
-2. Abra o Claude Code e rode o prompt de kickoff de `08-PLANO-CLAUDE-CODE.md` (Sprint 0).
-3. Os 10 subagentes em `.claude/agents/` podem ser acionados em paralelo para (a) revisar as
-   fontes com mais profundidade e (b) refinar o conteúdo da fase que cada um domina.
-4. A partir daí, o fluxo é o seu de sempre: schema-first → TDD → ADR → branch `dev` → `main` → Dokploy.
+1. Clone o repositório e siga a seção 1 de [`08-PLANO-CLAUDE-CODE.md`](08-PLANO-CLAUDE-CODE.md):
+   `pnpm install`, Postgres no Docker, `.env`, `db:push`, `pnpm dev`.
+2. Abra o Claude Code na raiz — ele lê `CLAUDE.md` sozinho (comandos, mapa do código, regras).
+3. O que fazer em seguida está em `.ai/handoff.md`.
+4. Os 10 subagentes em `.claude/agents/` revisam e refinam o conteúdo de cada fase; a sessão
+   principal consolida.
+5. O fluxo é o de sempre: schema-first → TDD → ADR → branch `dev` → `main` → Dokploy.
 
 ## 5. Nota de honestidade sobre o processo
 

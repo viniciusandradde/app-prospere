@@ -9,10 +9,10 @@
 | Formulários | react-hook-form + **Zod** | O schema Zod de cada ferramenta é a fonte da verdade do artefato |
 | Banco | **PostgreSQL** (exigência) | JSONB para artefatos, integridade relacional para trilha/missões |
 | ORM/migrations | **Drizzle ORM + drizzle-kit** | Schema em TS, migrations versionadas, SQL transparente (schema-first) |
-| Auth | Auth.js (NextAuth) com credenciais + link mágico | Simples no P0; OAuth depois |
-| E-mail | Resend (ou equivalente) via Nodemailer abstraído | Lembretes de ritual |
+| Auth | Própria, por link mágico (ADR-007) | Um método só não paga o schema do adaptador do Auth.js |
+| E-mail | Resend por `fetch` direto (ADR-009) | Link de acesso e lembrete do ritual |
 | Validação/regras | Módulo puro `packages/engine` (sem dependência de UI ou DB) | Motor de trilha testável isoladamente |
-| Testes | **Vitest** (unit/integration) + Playwright (e2e) + Testcontainers (Postgres) | TDD-first |
+| Testes | **Vitest** (unit) + Playwright (e2e, desktop e 360 px) sobre Postgres real | TDD-first |
 | IA (P1) | Anthropic API via rota de servidor; prompts em `content/agentes/` | Personas dos 10 agentes |
 | Deploy | Docker → **Dokploy** (main) ; branch `dev` com testes locais | Convenção já usada |
 | Observabilidade | Logs estruturados + Sentry (MCP já conectado) | |
@@ -20,31 +20,33 @@
 ## 2. Estrutura do repositório
 
 ```
-prospere/
-├── CLAUDE.md
-├── .ai/ (context.md, progress.md, handoff.md)
-├── .claude/agents/ (10 subagentes)
-├── docs/ (00..08 deste pacote + adr/)
-├── apps/web/                      # Next.js
-│   ├── app/(auth)/ (login, cadastro)
-│   ├── app/(app)/hoje | trilha | missao/[id] | ferramenta/[id] | rituais | biblioteca | config
-│   ├── app/onboarding/board/[step]
-│   ├── app/api/ (rotas mínimas; preferir Server Actions)
-│   ├── components/ (shadcn + componentes de domínio)
-│   └── lib/ (db, auth, actions, email)
+app-prospere/
+├── CLAUDE.md · .ai/ (context, progress, handoff) · .claude/agents/ (10 subagentes)
+├── docs/ (00..09 + adr/ + capturas/)
+├── apps/web/                       # Next.js (App Router) — o Drizzle mora aqui
+│   ├── src/app/(auth)             # entrar/ (+ verificar/route.ts: troca token por cookie)
+│   ├── src/app/(app)/             # hoje | trilha | missao/[id] | ferramenta/[slug] | ritual | conta
+│   ├── src/app/onboarding/board/  # wizard das 7 perguntas
+│   ├── src/app/api/               # export (Markdown) · cron/lembretes
+│   ├── src/actions/               # Server Actions (ADR-004)
+│   ├── src/db/schema.ts           # 13 tabelas — fonte da verdade dos campos
+│   ├── src/lib/                   # auth (ADR-007), queries, email (ADR-009), telemetry
+│   └── src/components/ui/         # primitivas no padrão shadcn/ui
 ├── packages/engine/               # motor de trilha (puro)
-│   ├── src/board.schema.ts        # Zod das respostas
-│   ├── src/archetype.ts           # classificação
-│   ├── src/weights.ts             # pesos + ajustes
-│   ├── src/trail.ts               # montagem da trilha
-│   ├── src/explain.ts             # resumo das regras disparadas
-│   └── test/ (6 personas + casos de borda)
-├── packages/content/              # biblioteca de missões/ferramentas/livros (TS tipado, gerado a partir de docs/03)
-│   ├── phases.ts, missions.ts, tools/*.schema.ts, books.ts, agents.ts
-│   └── test/ (integridade: IDs únicos, pré-requisitos válidos, toda missão tem fase)
-├── packages/db/                   # Drizzle schema + migrations + seed
-└── docker/ (Dockerfile, compose para dev com Postgres)
+│   ├── src/board.ts               # Zod das respostas + leitura do seed
+│   ├── src/trail.ts               # arquétipo, meta, ajustes, fases, explicação
+│   └── test/                      # personas + bordas + combinações do PRD
+├── packages/content/              # catálogo tipado (ADR-003/008)
+│   ├── src/missions.ts · phases.ts · books.ts · tools/*.ts (Zod + render Markdown)
+│   └── test/                      # integridade: ids únicos, catálogo × board
+├── e2e/                           # Playwright: fluxo completo, desktop e 360 px
+├── seed/board.negocio.json        # as regras da trilha, versionadas
+├── scripts/                       # extract-sources · testar-email · checar-dns-email · capturas
+└── docker/                        # Dockerfile (Dokploy) + Postgres local
 ```
+
+> `packages/db` não existe: o MVP mantém o Drizzle dentro de `apps/web` (PRD Negócio, seção 11).
+> Não há tabelas de catálogo nem seed — ver ADR-008.
 
 ## 3. Decisões (ADRs iniciais)
 
@@ -74,9 +76,13 @@ P0 cria um workspace pessoal por conta. Consequência: sem migração dolorosa d
 Decisão: criptografia em repouso no volume do banco; exportação e exclusão de conta no P0; nenhum
 dado de artefato é enviado para IA sem consentimento explícito por conversa (P1); logs sem PII.
 
+**ADR-007 · Autenticação própria por link mágico**, em vez de Auth.js — ver `adr/007`.
+**ADR-008 · Catálogo só em código**, sem tabelas nem seed — ver `adr/008`.
+**ADR-009 · Resend como provedor de e-mail transacional** — ver `adr/009`.
+
 ## 4. Regras de engenharia (do seu padrão)
 
-- Schema-first: alterar `packages/db/schema.ts` → migration → testes → UI. Nunca assumir nomes de campos.
+- Schema-first: alterar `apps/web/src/db/schema.ts` → migration → testes → UI. Nunca assumir nomes de campos.
 - TDD: motor de trilha e schemas de ferramentas nascem com testes; e2e do fluxo board → trilha → missão → artefato → ritual.
 - ADR para toda decisão estrutural (`docs/adr/NNN-titulo.md`).
 - `.ai/context.md` (o que é o projeto), `.ai/progress.md` (o que foi feito), `.ai/handoff.md` (próximo passo) atualizados ao fim de cada sessão.

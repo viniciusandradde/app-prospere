@@ -70,6 +70,7 @@ export function OfertaForm({ initial }: { initial: Oferta }) {
             {[0, 1, 2].map((index) => (
               <Input
                 key={index}
+                aria-label={`Benefício emocional ${index + 1}`}
                 {...register(`beneficios_emocionais.${index}` as const)}
                 placeholder={`Benefício emocional ${index + 1}`}
               />
@@ -80,6 +81,7 @@ export function OfertaForm({ initial }: { initial: Oferta }) {
             {[0, 1, 2].map((index) => (
               <Input
                 key={index}
+                aria-label={`Benefício prático ${index + 1}`}
                 {...register(`beneficios_praticos.${index}` as const)}
                 placeholder={`Benefício prático ${index + 1}`}
               />

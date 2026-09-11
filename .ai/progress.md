@@ -43,3 +43,14 @@
   e script de teste).
 - Domínio adicionado no painel da Resend; os registros DNS obrigatórios ainda não estavam no ar
   (conferido em 3 resolvedores). `pnpm email:dns` verifica MX, SPF, DKIM e DMARC a qualquer momento.
+
+## 2026-09-11 — Acessibilidade dos formulários e capturas de tela
+- Bug real encontrado ao gerar as capturas: o `Field` injetava o `id` no elemento filho mesmo
+  quando ele era um arranjo (campo + botão), criando id duplicado — o `<label>` apontava para o
+  `div` e o campo ficava sem rótulo para leitor de tela. `Input`/`Textarea` são `forwardRef`,
+  cujo `type` é objeto, o que também confundia a detecção. Regra reescrita e coberta por e2e.
+- `aria-label` nas listas sem rótulo individual (vitórias, prioridades, benefícios da oferta).
+- `docs/capturas/` com 12 telas (desktop e 360 px), geradas do app real por `scripts/capturas.mjs`.
+- Documentação atualizada para quem for continuar no Claude Code: `CLAUDE.md` reescrito
+  (comandos, mapa do código, armadilhas), `docs/08` virou guia de continuação, `docs/00` e
+  `docs/05` com a estrutura real, CONTRIBUTING com os comandos de verificação.

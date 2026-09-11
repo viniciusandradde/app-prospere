@@ -120,6 +120,12 @@ test('cadastro, board, trilha personalizada e missão concluída', async ({ page
   await page.getByRole('button', { name: 'Concluir missão' }).click();
   await expect(page.getByRole('button', { name: 'Desfazer conclusão' })).toBeVisible();
 
+  // Contador: o campo precisa ser alcançável pelo rótulo — leitor de tela e teste usam o mesmo caminho.
+  await page.goto('/missao/SON-01');
+  await page.getByLabel('Quem foi e a frase que ficou').fill('Ana, 32 — já gastou R$ 1.200 em consultas avulsas');
+  await page.getByRole('button', { name: 'Registrar' }).click();
+  await expect(page.getByText('1 de 10')).toBeVisible();
+
   await page.goto('/hoje');
   await expect(page.getByRole('heading', { name: 'Hoje' })).toBeVisible();
   await expect(page.getByRole('link', { name: /Abrir missão/ })).toBeVisible();

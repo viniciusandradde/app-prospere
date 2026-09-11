@@ -8,7 +8,8 @@ empresa. Cada fase tem missões e ferramentas que geram artefatos; rituais seman
 As Armas da Persuasão 2.0; Nunca Almoce Sozinho; O Coach de 1 Trilhão de Dólares; Responsabilidade
 Extrema) + 21 e-books do bundle Projeto Milhão (absorvidos sem citação).
 
-**Documentos**: `docs/00` a `docs/08`, `docs/06-schema.sql`, `seed/board.json`, `.claude/agents/`.
+**Documentos**: `docs/00` a `docs/09`, `docs/06-schema.sql`, `seed/board.negocio.json` (ativo),
+`docs/adr/`, `.claude/agents/`. Para operar o repositório: `CLAUDE.md`.
 
 **Decisões vivas**: ADR-001 motor determinístico; ADR-002 artefatos JSONB + Zod versionado;
 ADR-003 conteúdo como código; ADR-004 Server Actions/RSC; ADR-005 multi-tenant no schema;

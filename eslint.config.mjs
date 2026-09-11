@@ -33,7 +33,7 @@ export default tseslint.config(
     // Utilitários de linha de comando rodam no Node, fora do bundle do app.
     files: ['scripts/**/*.mjs'],
     languageOptions: {
-      globals: { console: 'readonly', fetch: 'readonly', process: 'readonly' },
+      globals: { console: 'readonly', fetch: 'readonly', process: 'readonly', URL: 'readonly' },
       parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
     },
   },

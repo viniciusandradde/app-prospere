@@ -69,6 +69,7 @@ export function ReviewForm({
               {[0, 1, 2].map((index) => (
                 <Input
                   key={index}
+                  aria-label={`Vitória ${index + 1}`}
                   value={values.vitorias[index] ?? ''}
                   onChange={(event) => setList('vitorias', index, event.target.value)}
                   placeholder={`Vitória ${index + 1}`}
@@ -150,6 +151,7 @@ export function ReviewForm({
               {[0, 1, 2].map((index) => (
                 <Input
                   key={index}
+                  aria-label={`Prioridade ${index + 1}`}
                   value={values.prioridades_proxima[index] ?? ''}
                   onChange={(event) => setList('prioridades_proxima', index, event.target.value)}
                   placeholder={`Prioridade ${index + 1}`}
