@@ -19,7 +19,8 @@
     "db:push": "pnpm --filter @prospere/web db:push",
     "test:e2e": "playwright test",
     "db:studio": "pnpm --filter @prospere/web exec drizzle-kit studio",
-    "email:testar": "node --env-file=.env scripts/testar-email.mjs"
+    "email:testar": "node --env-file=.env scripts/testar-email.mjs",
+    "email:dns": "node scripts/checar-dns-email.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

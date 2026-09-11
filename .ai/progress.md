@@ -37,3 +37,9 @@
   tempo limite de 10 s para a API não segurar a ação do usuário.
 - `pnpm email:testar <e-mail>` confere chave, remetente e domínio antes do deploy.
 - Pendente: verificar domínio próprio na Resend (o remetente de teste só entrega para o dono da conta).
+
+## 2026-09-11 — Domínio de e-mail
+- Remetente do produto passa a ser `nao-responda@prospere.vsatecnologia.com.br` (código, `.env.example`
+  e script de teste).
+- Domínio adicionado no painel da Resend; os registros DNS obrigatórios ainda não estavam no ar
+  (conferido em 3 resolvedores). `pnpm email:dns` verifica MX, SPF, DKIM e DMARC a qualquer momento.

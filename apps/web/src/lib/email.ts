@@ -18,8 +18,11 @@ export interface SendResult {
   error?: string;
 }
 
-/** Remetente de teste da Resend: entrega apenas para o e-mail dono da conta. */
-const DEFAULT_FROM = 'PROSPERE <onboarding@resend.dev>';
+/**
+ * Remetente do produto. Exige o domínio verificado na Resend; enquanto ele não estiver,
+ * `EMAIL_FROM=PROSPERE <onboarding@resend.dev>` entrega só para o dono da conta Resend.
+ */
+const DEFAULT_FROM = 'PROSPERE <nao-responda@prospere.vsatecnologia.com.br>';
 const TIMEOUT_MS = 10_000;
 
 /**

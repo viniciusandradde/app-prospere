@@ -17,9 +17,10 @@ Usar a **Resend** (`POST https://api.resend.com/emails`), chamada direta por `fe
 `apps/web/src/lib/email.ts`, sem SDK. Configuração por variáveis de ambiente:
 `EMAIL_API_KEY` e `EMAIL_FROM`.
 
-Enquanto não houver domínio verificado, o remetente é `onboarding@resend.dev`, que a Resend
-entrega **apenas para o e-mail dono da conta** — suficiente para desenvolvimento e para o
-teste de fumaça, não para o beta.
+O remetente do produto é `nao-responda@prospere.vsatecnologia.com.br`. Enquanto a verificação
+do domínio não passa, `EMAIL_FROM="PROSPERE <onboarding@resend.dev>"` funciona como
+alternativa: a Resend entrega desse remetente **apenas para o e-mail dono da conta** —
+suficiente para desenvolvimento, não para o beta.
 
 ## Alternativas consideradas
 
@@ -41,8 +42,27 @@ se a Resend cair, ninguém faz login novo (sessões existentes seguem valendo, 3
 (ignorado pelo Git) e nas variáveis de ambiente do Dokploy; mostrar o link mágico na tela em
 produção, mesmo que o envio falhe.
 
+## Estado da verificação do domínio
+
+`prospere.vsatecnologia.com.br` foi adicionado no painel da Resend em 2026-09-11. Em
+2026-09-11 os registros DNS ainda **não estavam publicados** (conferido em três resolvedores:
+sistema, 1.1.1.1 e 8.8.8.8). O DNS do domínio é servido pela Cloudflare.
+
+Enquanto faltar qualquer registro obrigatório, a Resend recusa o envio com erro de domínio
+não verificado — e, pelo desenho acima, ninguém consegue entrar no app por link novo.
+
+| Registro | Nome | O que faz |
+|:--|:--|:--|
+| MX | `send.prospere.vsatecnologia.com.br` | Retorno de bounces (aponta para `feedback-smtp.<região>.amazonses.com`) |
+| TXT | `send.prospere.vsatecnologia.com.br` | SPF (`v=spf1 include:amazonses.com ~all`) |
+| TXT | `resend._domainkey.prospere.vsatecnologia.com.br` | DKIM (chave pública gerada pela Resend) |
+| TXT | `_dmarc.prospere.vsatecnologia.com.br` | DMARC — opcional, recomendado (`v=DMARC1; p=none;`) |
+
+Os valores exatos (região do MX e chave DKIM) saem do painel: **Domains → prospere.vsatecnologia.com.br**.
+Na Cloudflare, os registros ficam como *DNS only* — TXT e MX não são proxiáveis.
+
 ## Pendências antes do beta
 
-1. Verificar um domínio próprio na Resend e trocar `EMAIL_FROM`.
-2. Configurar SPF, DKIM e DMARC do domínio (a Resend gera os registros).
-3. Conferir o envio com `pnpm email:testar voce@seudominio.com.br`.
+1. Publicar os 3 registros obrigatórios no DNS e conferir com `pnpm email:dns`.
+2. Clicar em *Verify* no painel da Resend.
+3. Conferir o envio real com `pnpm email:testar voce@exemplo.com`.

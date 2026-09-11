@@ -155,7 +155,7 @@ pnpm --filter @prospere/web db:push             # cria as tabelas
 pnpm dev                                        # http://localhost:3000
 ```
 
-**E-mail (Resend):** o app envia o link de acesso e o lembrete do ritual pela [Resend](https://resend.com) ([ADR-009](docs/adr/009-provedor-de-email.md)). Configure `EMAIL_API_KEY` e `EMAIL_FROM` no `.env`. Enquanto não houver domínio verificado, use o remetente `onboarding@resend.dev` — ele entrega apenas para o e-mail dono da conta Resend. Confira com `pnpm email:testar voce@exemplo.com`.
+**E-mail (Resend):** o app envia o link de acesso e o lembrete do ritual pela [Resend](https://resend.com) ([ADR-009](docs/adr/009-provedor-de-email.md)), do remetente `nao-responda@prospere.vsatecnologia.com.br`. Configure `EMAIL_API_KEY` e `EMAIL_FROM` no `.env`. O domínio precisa estar verificado na Resend: `pnpm email:dns` mostra quais registros DNS faltam e `pnpm email:testar voce@exemplo.com` confere o envio de ponta a ponta.
 
 Sem chave configurada (ou com `EMAIL_TRANSPORT=console`), o e-mail vai para o log do servidor e, fora de produção, o link de acesso aparece na própria tela de login.
 
@@ -168,6 +168,7 @@ Sem chave configurada (ou com `EMAIL_TRANSPORT=console`), o e-mail vai para o lo
 | `pnpm test:e2e` | Fluxo completo no navegador, desktop e mobile |
 | `pnpm lint` / `pnpm typecheck` | Lint e tipos em todo o monorepo |
 | `pnpm --filter @prospere/web db:generate` | Gera migration a partir do schema Drizzle |
+| `pnpm email:dns` | Confere os registros DNS que a Resend exige |
 | `pnpm email:testar <e-mail>` | Envia um e-mail de teste pela Resend |
 
 **Lembretes do ritual:** um agendador externo chama `POST /api/cron/lembretes` com o cabeçalho `Authorization: Bearer $CRON_SECRET`.

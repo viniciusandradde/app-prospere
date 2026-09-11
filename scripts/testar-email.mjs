@@ -7,7 +7,7 @@
  */
 const destino = process.argv[2];
 const apiKey = process.env.EMAIL_API_KEY;
-const from = process.env.EMAIL_FROM ?? 'PROSPERE <onboarding@resend.dev>';
+const from = process.env.EMAIL_FROM ?? 'PROSPERE <nao-responda@prospere.vsatecnologia.com.br>';
 
 if (!destino) {
   console.error('Uso: node --env-file=.env scripts/testar-email.mjs destino@exemplo.com');
@@ -35,7 +35,11 @@ if (!response.ok) {
   console.error(`Falha (HTTP ${response.status}): ${corpo.message ?? JSON.stringify(corpo)}`);
   if (String(corpo.message ?? '').includes('domain')) {
     console.error(
-      'Dica: sem domínio verificado, a Resend só entrega de onboarding@resend.dev para o e-mail dono da conta.',
+      [
+        'Dica: o domínio do remetente precisa estar verificado na Resend.',
+        'Confira no painel os registros DNS (SPF em send.<domínio>, DKIM em resend._domainkey.<domínio>)',
+        'ou use "PROSPERE <onboarding@resend.dev>", que entrega só para o e-mail dono da conta.',
+      ].join('\n'),
     );
   }
   process.exit(1);

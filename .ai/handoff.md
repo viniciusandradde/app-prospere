@@ -19,11 +19,13 @@ Sem `EMAIL_API_KEY`, o link de acesso aparece na própria tela de login (fora de
 
 1. **Deploy**: subir `docker/Dockerfile` no Dokploy a partir de `main`; configurar
    `DATABASE_URL`, `NEXT_PUBLIC_APP_URL`, `EMAIL_API_KEY`, `EMAIL_FROM` e `CRON_SECRET`.
-2. **E-mail transacional**: decidido — **Resend** (ADR-009). A chave vive em `.env` (ignorado
-   pelo Git) e nas variáveis do Dokploy, nunca no repositório. Falta **verificar um domínio
-   próprio** e trocar `EMAIL_FROM`: com `onboarding@resend.dev` a entrega só funciona para o
-   e-mail dono da conta, o que não atende os 20 do beta. SPF/DKIM/DMARC saem do painel da
-   Resend. Conferir com `pnpm email:testar voce@seudominio.com.br`.
+2. **E-mail transacional**: decidido — **Resend** (ADR-009), remetente
+   `nao-responda@prospere.vsatecnologia.com.br`. A chave vive em `.env` (ignorado pelo Git) e
+   nas variáveis do Dokploy, nunca no repositório. **Bloqueio atual**: o domínio foi adicionado
+   no painel da Resend, mas os registros DNS (MX e SPF em `send.`, DKIM em
+   `resend._domainkey.`) ainda não estavam publicados em 2026-09-11 — sem eles a Resend recusa
+   o envio e ninguém entra por link novo. Publique os registros na Cloudflare, rode
+   `pnpm email:dns`, clique em *Verify* na Resend e feche com `pnpm email:testar`.
 3. **Agendador**: apontar um cron de hora em hora para `POST /api/cron/lembretes` com
    `Authorization: Bearer $CRON_SECRET`.
 4. **Beta com 20 pessoas** (10 A3, 10 A4) e o gate da semana 8 — critérios na seção 2 do
