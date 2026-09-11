@@ -28,3 +28,12 @@
   Markdown; telemetria dos 6 eventos; exclusão de conta (LGPD); lembrete por e-mail via cron.
 - **Testes**: 57 unitários (Vitest) + 8 e2e (Playwright, desktop e mobile 360 px) contra Postgres real.
 - **ADRs**: 000 (versões), 007 (auth própria em vez de Auth.js), 008 (catálogo sem tabelas).
+
+## 2026-09-11 — Provedor de e-mail definido
+- **Resend** escolhida e integrada por `fetch` direto, sem SDK (ADR-009) — resolve a questão
+  aberta que bloqueava N-08 (lembrete da Revisão Semanal).
+- `EMAIL_TRANSPORT` explícito: `resend` envia, `console` escreve no log (dev e e2e).
+- Falha de envio em produção devolve erro tratado e **não** expõe o link mágico na tela;
+  tempo limite de 10 s para a API não segurar a ação do usuário.
+- `pnpm email:testar <e-mail>` confere chave, remetente e domínio antes do deploy.
+- Pendente: verificar domínio próprio na Resend (o remetente de teste só entrega para o dono da conta).

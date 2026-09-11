@@ -34,6 +34,9 @@ export default defineConfig({
     env: {
       DATABASE_URL: process.env.DATABASE_URL ?? 'postgresql://prospere@127.0.0.1:5433/prospere',
       NEXT_PUBLIC_APP_URL: `http://127.0.0.1:${PORT}`,
+      // O e2e não tem rede para a Resend: o e-mail vai para o log do servidor.
+      EMAIL_TRANSPORT: 'console',
+      EMAIL_API_KEY: 'e2e',
     },
   },
 });

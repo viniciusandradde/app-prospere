@@ -29,4 +29,11 @@ export default tseslint.config(
     files: ['**/*.tsx'],
     rules: { 'no-undef': 'off' },
   },
+  {
+    // Utilitários de linha de comando rodam no Node, fora do bundle do app.
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: { console: 'readonly', fetch: 'readonly', process: 'readonly' },
+    },
+  },
 );

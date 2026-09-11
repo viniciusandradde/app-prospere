@@ -30,7 +30,7 @@ const entrar = async (page: Page, email: string) => {
   await expect(page.getByRole('heading', { name: 'Entrar' })).toBeVisible();
   await page.getByLabel('Seu e-mail').fill(email);
   await page.getByRole('button', { name: 'Receber link de acesso' }).click();
-  await expect(page.getByText(/Link enviado|Sem provedor de e-mail/)).toBeVisible();
+  await expect(page.getByText(/Link enviado/)).toBeVisible();
 
   const pedidos = await comBanco((client) =>
     client.query('select id from login_tokens where email = $1', [email]),

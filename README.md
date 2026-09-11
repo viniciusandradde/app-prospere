@@ -155,7 +155,9 @@ pnpm --filter @prospere/web db:push             # cria as tabelas
 pnpm dev                                        # http://localhost:3000
 ```
 
-Sem `EMAIL_API_KEY` configurada, o link de acesso do cadastro aparece na própria tela de login — o suficiente para desenvolver sem provedor de e-mail.
+**E-mail (Resend):** o app envia o link de acesso e o lembrete do ritual pela [Resend](https://resend.com) ([ADR-009](docs/adr/009-provedor-de-email.md)). Configure `EMAIL_API_KEY` e `EMAIL_FROM` no `.env`. Enquanto não houver domínio verificado, use o remetente `onboarding@resend.dev` — ele entrega apenas para o e-mail dono da conta Resend. Confira com `pnpm email:testar voce@exemplo.com`.
+
+Sem chave configurada (ou com `EMAIL_TRANSPORT=console`), o e-mail vai para o log do servidor e, fora de produção, o link de acesso aparece na própria tela de login.
 
 **Comandos:**
 
@@ -166,6 +168,7 @@ Sem `EMAIL_API_KEY` configurada, o link de acesso do cadastro aparece na própri
 | `pnpm test:e2e` | Fluxo completo no navegador, desktop e mobile |
 | `pnpm lint` / `pnpm typecheck` | Lint e tipos em todo o monorepo |
 | `pnpm --filter @prospere/web db:generate` | Gera migration a partir do schema Drizzle |
+| `pnpm email:testar <e-mail>` | Envia um e-mail de teste pela Resend |
 
 **Lembretes do ritual:** um agendador externo chama `POST /api/cron/lembretes` com o cabeçalho `Authorization: Bearer $CRON_SECRET`.
 
@@ -184,7 +187,7 @@ python3 scripts/extract-sources.py <pasta-com-os-originais> sources/
 | 1 | Monorepo, motor de trilha, conteúdo tipado, board | ✅ `pnpm test` verde, trilha gerada para as personas |
 | 2 | Auth, board na UI, tela da trilha, missões | ✅ e2e: cadastro → board → trilha → missão concluída |
 | 3 | Quadro Construir-Medir-Aprender + Construtor de Oferta | ✅ schema, formulário, render Markdown e testes |
-| 4 | Revisão Semanal, lembretes, exportar, LGPD, deploy | ⏳ falta o deploy no Dokploy e o provedor de e-mail |
+| 4 | Revisão Semanal, lembretes, exportar, LGPD, deploy | ⏳ e-mail decidido (Resend); falta verificar o domínio e o deploy no Dokploy |
 | 5–6 | Acompanhamento do beta, entrevistas, teste de preço | ⏳ **Gate** documentado em ADR |
 | v1.1 | Pipeline, Planejador de Lançamento, chat por fase | Só se o gate passar |
 | v2 | Edição Pessoal, Escalar como programa, workspace de empresa | — |

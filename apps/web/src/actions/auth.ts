@@ -26,12 +26,25 @@ export async function requestLoginAction(
   const { url } = await createMagicLink(parsed.data);
   const { delivered } = await sendEmail(magicLinkEmail(parsed.data, url));
 
+  if (delivered) {
+    return {
+      status: 'sent',
+      message: 'Link enviado. Confira sua caixa de entrada — ele vale por 15 minutos.',
+    };
+  }
+
+  // Fora de produção, sem provedor configurado, o link vai para a tela para não travar o dev.
+  if (process.env.NODE_ENV !== 'production') {
+    return {
+      status: 'sent',
+      message: 'O e-mail não saiu neste ambiente. Use o link abaixo.',
+      devUrl: url,
+    };
+  }
+
   return {
-    status: 'sent',
-    message: delivered
-      ? 'Link enviado. Confira sua caixa de entrada — ele vale por 15 minutos.'
-      : 'Sem provedor de e-mail configurado neste ambiente. Use o link abaixo.',
-    ...(delivered || process.env.NODE_ENV === 'production' ? {} : { devUrl: url }),
+    status: 'error',
+    message: 'Não conseguimos enviar o e-mail agora. Tente de novo em alguns instantes.',
   };
 }
 
